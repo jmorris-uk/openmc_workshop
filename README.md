@@ -3,6 +3,11 @@ A selection of resources for learning openmc with particular focus on simulation
 
 Introduction slides https://slides.com/shimwell/neutronics_workshop
 
+### Acknowledgments
+Fred Thomas for providing examples from the Serpent workshop
+Enrique Miralles Dolz for providing the CSG tokamak model
+
+
 ### Installation
 
 The use of OpenMC for neutronics analysis requires several software packages and data. To avoid installation of these dependancies and compatability issues with different operating systems the entrie workshop is distributed as a portable Docker container. Therefore the installation process consists of two steps.
@@ -21,6 +26,41 @@ This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, n
 ### Getting started on the tasks
 
 #### Task 1 - plot some fusion relevant cross sections
+
+Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). OpenMC is also able to plot cross sections for isotopes and materials.
+
+from inside the docker container navigate to the task 1 directory
+
+```cd task_1```
+
+Open the first example python script
+
+```atom example_isotope_plot.py```
+
+OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation]([???]). This script will plot a selection of isotopes and certain reactions.
+
+Try running the script with Python3
+
+```python3 example_isotope_plot.py```
+
+You should see an interactive plot of the n,2n cross section for an isotope of Lead. To add different reactions to the plot we would need the ENDF reaction number which standard available [here]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf]).
+
+Try adding the other lead isotopes and Be9 to the plot.
+Try adding tritium production in Li6 and Li7 to the plot.
+
+The plot should now show fusion relevant interactions. These are important reactions for breeder blankets as they offer high probability of neutron multiplication and tritium production. Can you guess which other isotopes offer a high chance of tritium production or neutron multiplication and why we might want to avoid such isotopes?
+
+A nice feature of OpenMc is that is can plot cross sections for combinations of isotopes. Open the next example python script
+
+```atom example_material_plot.py```
+
+This file shows us how to plot tritium production in Li4SiO4 which is a candiate ceramic breeder blanket material. Try adding others Li2SiO3, Li2ZrO3, Li2TiO3 to the plot.
+
+Produce the plot with the command
+
+```python3 example_material_plot.py```
+
+
 
 #### Task 2 - visulise the model geometry
 
