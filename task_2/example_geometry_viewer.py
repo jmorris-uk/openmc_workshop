@@ -16,8 +16,8 @@ mats.export_to_xml()
 
 
 #example surfaces
-sph1 = openmc.Sphere(R=10)
-sph2 = openmc.Sphere(R=20)
+sph1 = openmc.Sphere(R=100)
+sph2 = openmc.Sphere(R=200)
 sph3 = +sph1 & -sph2 #above sph1 and below sph2
 
 #add surfaces here using https://openmc.readthedocs.io/en/stable/usersguide/geometry.html#surfaces-and-regions
@@ -30,9 +30,9 @@ cell.fill = natural_lead
 
 universe = openmc.Universe(cells=[cell]) #this list will need to include the new cell
 
-plt.show(universe.plot(width=(45,45),basis='xz',colors={cell: 'blue'}))
-plt.show(universe.plot(width=(45,45),basis='xy',colors={cell: 'blue'}))
-plt.show(universe.plot(width=(45,45),basis='yz',colors={cell: 'blue'}))
+plt.show(universe.plot(width=(400,400),basis='xz',colors={cell: 'blue'}))
+plt.show(universe.plot(width=(400,400),basis='xy',colors={cell: 'blue'}))
+plt.show(universe.plot(width=(400,400),basis='yz',colors={cell: 'blue'}))
 
 geom = openmc.Geometry(universe)
 

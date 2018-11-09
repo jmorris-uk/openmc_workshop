@@ -1,10 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <materials>
-  <material id="1" name="natural_lead">
-    <density units="sum" />
-    <nuclide ao="0.014" name="Pb204" />
-    <nuclide ao="0.241" name="Pb206" />
-    <nuclide ao="0.221" name="Pb207" />
-    <nuclide ao="0.524" name="Pb208" />
+  <material id="1" name="PbLi">
+    <density units="g/cm3" value="11.0" />
+    <nuclide ao="1.1788" name="Pb204" />
+    <nuclide ao="20.2922" name="Pb206" />
+    <nuclide ao="18.6082" name="Pb207" />
+    <nuclide ao="44.1208" name="Pb208" />
+    <nuclide ao="14.22" name="Li6" />
+    <nuclide ao="1.5799999999999996" name="Li7" />
   </material>
 </materials>
