@@ -3,29 +3,15 @@ import openmc.model
 import os
 import matplotlib.pyplot as plt
 
-outer=10
-rad=[3,4]
+
 #MATERIALS#
-
-min = 1
-max = outer
-
-
-R1 = rad[0]
-R2 = rad[1]
 
 mats = openmc.Materials()
 
-tungsten = openmc.Material(name='Tungsten')
-tungsten.set_density('g/cm3', 19.0)
-tungsten.add_element('W', 1.0)
-mats.append(tungsten)
-
-water = openmc.Material(name='Water')
-water.set_density('g/cm3', 1.0)
-water.add_element('H', 2.0)
-water.add_element('O', 1.0)
-mats.append(water)
+copper = openmc.Material(name='Copper')
+copper.set_density('g/cm3', 8.5)
+copper.add_element('Cu', 1.0)
+mats.append(copper)
 
 eurofer = openmc.Material(name='EUROFER97')
 eurofer.set_density('g/cm3', 7.75)
@@ -39,45 +25,36 @@ eurofer.add_element('N', 0.003, percent_type='wo')
 eurofer.add_element('V', 0.2, percent_type='wo')
 mats.append(eurofer)
 
-boron = openmc.Material(name='Boron')
-boron.set_density('g/cm3', 2.37)
-boron.add_element('B', 1.0)
-mats.append(boron)
-
 #GEOMETRY#
 
-sphere1 = openmc.Sphere(R=min)
-sphere2 = openmc.Sphere(R=R1)
-sphere3 = openmc.Sphere(R=R2)
-sphere4 = openmc.Sphere(R=max)
-sphere5 = openmc.Sphere(R=15)
-sphere6 = openmc.Sphere(R=17, boundary_type='vacuum')
+central_sol_surface = openmc.ZCylinder(R=100)
+central_shield_outer_surface = openmc.ZCylinder(R=110)
+vessel_inner = openmc.Sphere(R=500)
+first_wall_outer_surface = openmc.Sphere(R=510)
+breeder_blanket_outer_surface = openmc.Sphere(R=610)
 
-vac1 = -sphere1
-mat1 = +sphere1 & -sphere2
-mat2 = +sphere2 & -sphere3
-mat3 = +sphere3 & -sphere4
-vac2 = +sphere4 & -sphere5
-steel = +sphere5 & -sphere6
-vac3 = +sphere6
 
-vacuum1 = openmc.Cell(region=vac1)
-first = openmc.Cell(region=mat1)
-first.fill = tungsten
-second = openmc.Cell(region=mat2)
-second.fill = water
-third = openmc.Cell(region=mat3)
-third.fill = tungsten
-vacuum2 = openmc.Cell(region=vac2)
-vessel = openmc.Cell(region=steel)
-vessel.fill = boron
-vacuum3 = openmc.Cell(region=vac3)
+central_sol_region = -central_sol_surface & -vessel_inner
+central_sol_cell = openmc.Cell(region=central_sol_region) 
+central_sol_cell.fill = copper
 
-root = openmc.Universe(cells=(vacuum1, first, second, third, vacuum2, vessel, vacuum3))
+central_shield_region = +central_sol_surface & -central_shield_outer_surface & -vessel_inner
+central_shield_cell = openmc.Cell(region=central_shield_region) 
+central_shield_cell.fill = eurofer
 
-print(help(openmc.Universe.plot))
+first_wall_region = -first_wall_outer_surface & +vessel_inner
+first_wall_cell = openmc.Cell(region=first_wall_region) 
+first_wall_cell.fill = eurofer
 
-plt.show(root.plot(width=(max*2.1,max*2.1),
-                   basis='xz'))
-plt.show(root.plot(width=(max*2.1,max*2.1),basis='xy'))
-plt.show(root.plot(width=(max*2.1,max*2.1),basis='yz'))
+breeder_blanket_region = +first_wall_outer_surface & -breeder_blanket_outer_surface
+breeder_blanket_cell = openmc.Cell(region=breeder_blanket_region) 
+breeder_blanket_cell.fill = eurofer
+
+universe = openmc.Universe(cells=[central_sol_cell,central_shield_cell,first_wall_cell, breeder_blanket_cell])
+
+
+# VISULISATION
+
+plt.show(universe.plot(width=(1500,1500),basis='xz'))
+plt.show(universe.plot(width=(1500,1500),basis='xy'))
+plt.show(universe.plot(width=(1500,1500),basis='yz'))

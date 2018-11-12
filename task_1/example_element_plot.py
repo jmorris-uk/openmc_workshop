@@ -5,46 +5,40 @@
 __author__      = "Jonathan Shimwell"
 
 import openmc
-from plotly import __version__
 from plotly.offline import download_plotlyjs, plot
 from plotly.graph_objs import Scatter, Layout
+from tqdm import tqdm
+
+all_stable_elements = ['Ag', 'Al', 'Ar', 'As', 'Au', 'B', 'Ba', 'Be', 'Bi', 'Br', 'C', 'Ca', 'Cd', 'Ce', 'Cl', 'Co', 'Cr', 'Cs', 'Cu', 'Dy', 'Er', 'Eu', 'F', 'Fe', 'Ga', 'Gd', 'Ge', 'H', 'He', 'Hf', 'Hg', 'Ho', 'I', 'In', 'Ir', 'K', 'Kr', 'La', 'Li', 'Lu', 'Mg', 'Mn', 'Mo', 'N', 'Na', 'Nb', 'Nd', 'Ne', 'Ni', 'O', 'Os', 'P', 'Pa', 'Pb', 'Pd','Po', 'Pr', 'Pt', 'Rb', 'Re', 'Rh', 'Rn', 'Ru', 'S', 'Sb', 'Sc', 'Se', 'Si', 'Sm', 'Sn', 'Sr', 'Ta', 'Tb', 'Te', 'Th', 'Ti', 'Tl', 'Tm', 'U', 'V', 'W', 'Xe', 'Y', 'Yb', 'Zn', 'Zr']
+Endf_MT_number = [16] # MT number 16 is (n,n2) reaction, MT 205 is (n,t)
+traces=[]
 
 
+for element_name in tqdm(all_stable_elements):
+      try:
+            element_object = openmc.Material()
+            # this material defaults to a density of 1g/cm3
+            element_object.add_element(element_name,1.0,percent_type='ao')
+            energy, data = openmc.calculate_cexs(element_object, 'material', Endf_MT_number )
+            cross_section = data[0]
+
+            traces.append(Scatter(x=energy, 
+                              y=cross_section, 
+                              mode = 'lines', 
+                              name=element_name+' MT '+str(Endf_MT_number[0]))
+                        )
+      except:
+            print('element failed ',element_name)
 
 
-Be_element = openmc.Material()
-Be_element.add_element('Be',1.0,percent_type='ao')
-
-Pb_element = openmc.Material()
-Pb_element.add_element('Pb',1.0,percent_type='ao')
-
-Endf_MT_number = [16]
-
-Energy_Pb_MT16, data = openmc.calculate_cexs(Pb_element, 'material', Endf_MT_number )
-cross_section_Pb_MT16 = data[0]
-
-Energy_Be_MT16, data = openmc.calculate_cexs(Be_element, 'material', Endf_MT_number )
-cross_section_Be_MT16 = data[0]
-
-trace1= Scatter(x=Energy_Be_MT16, 
-                y=cross_section_Be_MT16, 
-                mode = 'lines', 
-                name='Be(n,2n)')
-
-trace2= Scatter(x=Energy_Pb_MT16, 
-                y=cross_section_Pb_MT16, 
-                mode = 'lines', 
-                name='Pb(n,2n)')
-
-layout = {'title':'Element cross sections',
+layout = {'title':'Element cross sections'+ str(Endf_MT_number[0]),
           'xaxis':{'title':'Energy (eV)',
                    'range':(0,14.1e6)},
           'yaxis':{'title':'Cross section (barns)'},
+          'hovermode':'closest'
          }
 
-plot({'data':[trace1,trace2],
+plot({'data':traces,
       'layout':layout})
 
-
-#example_element.set_density('g/cm3', 11.34)
 

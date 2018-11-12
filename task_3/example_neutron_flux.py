@@ -8,21 +8,20 @@ import openmc
 import matplotlib.pyplot as plt
 import os
 
-breeder_material = openmc.Material(1, "PbLi") #Pb84.2Li15.8 with 90% enrichment of Li6
+#MATERIALS#
 
-enrichment_fraction = 0.9
-
+breeder_material = openmc.Material(1, "PbLi") #Pb84.2Li15.8 with natural enrichment of Li6
+enrichment_fraction = 0.07
 breeder_material.add_element('Pb', 84.2,'ao')
 breeder_material.add_nuclide('Li6', enrichment_fraction*15.8, 'ao')
 breeder_material.add_nuclide('Li7', (1.0-enrichment_fraction)*15.8, 'ao')
-# breeder_material.set_density('atom/b-cm',3.2720171e-2)
-breeder_material.set_density('g/cm3',11.0)
-
+breeder_material.set_density('atom/b-cm',3.2720171e-2)
+#breeder_material.set_density('g/cm3',11.0)
 mats = openmc.Materials([breeder_material])
 
 
 
-
+#GEOMETRY#
 
 
 sph1 = openmc.Sphere(R=100)
@@ -43,18 +42,14 @@ geom = openmc.Geometry(universe)
 
 
 
-
-
-# OpenMC simulation parameters
-batches = 1
-inactive = 10
-particles = 5000
+#SIMULATION SETTINGS#
 
 # Instantiate a Settings object
 sett = openmc.Settings()
+batches = 1
 sett.batches = batches
-sett.inactive = inactive
-sett.particles = particles
+sett.inactive = 50
+sett.particles = 5000
 sett.run_mode = 'fixed source'
 
 # Create an initial uniform spatial source distribution over fissionable zones
@@ -65,9 +60,6 @@ source.energy = openmc.stats.Discrete([14e6], [1])
 sett.source = source
 
 
-tallies = openmc.Tallies()
-
-
 # Create mesh which will be used for tally
 mesh = openmc.Mesh()
 mesh_height=200
@@ -76,60 +68,30 @@ mesh.dimension = [mesh_width, mesh_height]
 mesh.lower_left = [-200, -200]
 mesh.upper_right = [200, 200]
 
+
+tallies = openmc.Tallies()
 # Create mesh filter for tally
 mesh_filter = openmc.MeshFilter(mesh)
-# Create mesh tally to score flux and tritium production rate
+# Create mesh tally to score flux
 mesh_tally = openmc.Tally(1,name='tallies_on_mesh')
 mesh_tally.filters = [mesh_filter]
-mesh_tally.scores = ['flux','(n,t)']
+mesh_tally.scores = ['flux'] #swap flux for absorption
 tallies.append(mesh_tally)
 
 
-
-cell_filter = openmc.CellFilter(breeder_blanket_cell)
-tbr_tally = openmc.Tally(2,name='TBR')
-tbr_tally.filters = [cell_filter]
-tbr_tally.scores = ['205']
-tallies.append(tbr_tally)
-
-try:
-    os.system('rm statepoint.'+str(batches)+'.h5')
-except:
-    pass
-
-# Run OpenMC! using the python objects instead of the xml files
+# Run OpenMC!
 model = openmc.model.Model(geom, mats, sett, tallies)
 model.run()
-#openmc.run()
 
+# open the results file
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
-#sp = openmc.StatePoint('statepoint.100.h5')
 
-tbr_tally_result = sp.get_tally(name='TBR')
-print(tbr_tally_result)
-print(tbr_tally_result.sum)
-
-
-
-flux_tally = sp.get_tally(scores=['flux'])
-flux_slice = flux_tally.get_slice(scores=['flux'])
-#flux_slice.std_dev.shape = (mesh_width, mesh_height)
+# access the flux tally
+flux_tally = sp.get_tally(scores=['flux'])  #swap flux for absorption
+flux_slice = flux_tally.get_slice(scores=['flux']) #swap flux for absorption
 flux_slice.mean.shape = (mesh_width, mesh_height)
 
 fig = plt.subplot()
 plt.show(fig.imshow(flux_slice.mean))
 
-print()
-absorption_tally = sp.get_tally(scores=['(n,t)'])
-absorption_slice = absorption_tally.get_slice(scores=['(n,t)'])
-#absorption_slice.std_dev.shape = (mesh_width, mesh_height)
-absorption_slice.mean.shape = (mesh_width, mesh_height)
-#absorption_slice.mean.shape = (100,100)
-
-fig = plt.subplot()
-print(fig.imshow(absorption_slice.mean))
-plt.show(fig.imshow(absorption_slice.mean))
-
 plt.show(universe.plot(width=(400,400),basis='xz'))
-#plt.show(universe.plot(width=(400,400),basis='xy'))
-#plt.show(universe.plot(width=(400,400),basis='yz'))

@@ -6,7 +6,36 @@
     <nuclide ao="20.2922" name="Pb206" />
     <nuclide ao="18.6082" name="Pb207" />
     <nuclide ao="44.1208" name="Pb208" />
-    <nuclide ao="14.22" name="Li6" />
-    <nuclide ao="1.5799999999999996" name="Li7" />
+    <nuclide ao="15.326" name="Li6" />
+    <nuclide ao="0.4740000000000004" name="Li7" />
+  </material>
+  <material id="2" name="Copper">
+    <density units="g/cm3" value="8.5" />
+    <nuclide ao="0.6915" name="Cu63" />
+    <nuclide ao="0.3085" name="Cu65" />
+  </material>
+  <material id="3" name="EUROFER97">
+    <density units="g/cm3" value="7.75" />
+    <nuclide name="Fe54" wo="5.028329345220077" />
+    <nuclide name="Fe56" wo="81.85393463210612" />
+    <nuclide name="Fe57" wo="1.9241755159710936" />
+    <nuclide name="Fe58" wo="0.2605605067027138" />
+    <nuclide name="C0" wo="0.11" />
+    <nuclide name="Mn55" wo="0.4" />
+    <nuclide name="Cr50" wo="0.37563178257995533" />
+    <nuclide name="Cr52" wo="7.532942618319126" />
+    <nuclide name="Cr53" wo="0.8706228193356687" />
+    <nuclide name="Cr54" wo="0.2208027797652488" />
+    <nuclide name="Ta180" wo="1.4332320036830332e-05" />
+    <nuclide name="Ta181" wo="0.11998566767996316" />
+    <nuclide name="W180" wo="0.0012920330810455832" />
+    <nuclide name="W182" wo="0.2884975447858981" />
+    <nuclide name="W183" wo="0.15664662813744726" />
+    <nuclide name="W184" wo="0.33724011258395853" />
+    <nuclide name="W186" wo="0.3163236814116507" />
+    <nuclide name="N14" wo="0.002988231639927561" />
+    <nuclide name="N15" wo="1.1768360072439048e-05" />
+    <nuclide name="V50" wo="0.0004902406711429266" />
+    <nuclide name="V51" wo="0.1995097593288571" />
   </material>
 </materials>

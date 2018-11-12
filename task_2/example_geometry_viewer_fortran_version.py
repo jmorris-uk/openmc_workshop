@@ -35,6 +35,7 @@ geom = openmc.Geometry(universe)
 geom.export_to_xml()
 
 p = openmc.Plot()
+p.basis='xz'
 p.filename = 'plot'
 p.width = (45, 45)
 p.pixels = (400, 400)

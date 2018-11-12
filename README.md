@@ -29,44 +29,89 @@ This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, n
 
 Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). OpenMC is also able to plot cross sections for isotopes and materials.
 
-from inside the docker container navigate to the task 1 directory
+from inside the docker container navigate to the task_1 directory and open the first example python script
 
 ```cd task_1```
-
-Open the first example python script
 
 ```atom example_isotope_plot.py```
 
 OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation]([???]). This script will plot a selection of isotopes and certain reactions.
 
-Try running the script with Python3
-
 ```python3 example_isotope_plot.py```
 
-You should see an interactive plot of the n,2n cross section for an isotope of Lead. To add different reactions to the plot we would need the ENDF reaction number which standard available [here]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf]).
+You should see an interactive plot of the n,2n cross section for an isotopes of lead and beryllium. To add different reactions to the plot we would need the ENDF reaction number which standard available [here]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf]).
 
-Try adding the other lead isotopes and Be9 to the plot.
-Try adding tritium production in Li6 and Li7 to the plot.
+- Try adding the other lead isotopes to the plot.
 
-The plot should now show fusion relevant interactions. These are important reactions for breeder blankets as they offer high probability of neutron multiplication and tritium production. Can you guess which other isotopes offer a high chance of tritium production or neutron multiplication and why we might want to avoid such isotopes?
+- Try adding tritium production in Li6 and Li7 to the same plot.
 
-A nice feature of OpenMc is that is can plot cross sections for combinations of isotopes. Open the next example python script
+The plot should now show fusion relevant interactions. These are important reactions for breeder blankets as they offer high probability of neutron multiplication and tritium production.
+
+- Try editting ```example_isotope_plot.py``` so that it plots tritium production or neutron multiplication for all the stable isotopes.
+
+Elemental properties can also be found with OpenMc. Try plotting tritium production and neutron multiplication using the ```example_element_plot.py``` script
+
+A nice feature of OpenMc is that is can plot cross sections for more complete materials made from combinations of isotopes. Open the next example python script and edit the script so that it can plot the tritium production and use this to identify the best elements for tritium production and neutron production. Why we might want to avoid some of these elements?
 
 ```atom example_material_plot.py```
 
-This file shows us how to plot tritium production in Li4SiO4 which is a candiate ceramic breeder blanket material. Try adding others Li2SiO3, Li2ZrO3, Li2TiO3 to the plot.
 
-Produce the plot with the command
+This file shows us how to plot tritium production in Li4SiO4 which is a candiate ceramic breeder blanket material. Try editting ```example_material_plot.py``` a
+so that other candiate breeder materials ae added to the plot. Produce the plot with the command
 
 ```python3 example_material_plot.py```
 
 
 
-#### Task 2 - visulise the model geometry
+#### Task 2 - building and visulising the model geometry
 
-OpenMC can provide both 2D and 3D visulisations of the CSG geometry. First 2d models can be produced ....
+OpenMC can provide both 2D and 3D visulisations of the CSG geometry.
+
+There are two methods of producing 2D slice views of the geometry
+
+The first example 2D slice plot can be produced by running
+
+```cd task_3```
+
+```python3 example_geometry_viewer.py```
+
+Views of the simple model from different angles should appear. Another example script which produces similar results but works better for large models.
+
+```python3 example_geometry_viewer_fortran_version.py```
+
+Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples]([https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry]) and the [documentmentation]([https://openmc.readthedocs.io/en/stable/usersguide/geometry.html]) for CSG opperations.
+
+- Change the inner radius of the blanket to 500cm
+
+- Change the thickness of the blanket to 100cm
+
+- Try adding a 10cm thick first wall to the hollow sphere.
+
+- Try adding a center column with a 100cm radius and a 40 cm shield.
+
+- Try creating a material from pure copper and assign it to the central column
+
+- Try creating a homogenised material from 10% water and 90% steel and assign it to the first wall and the shield.
+
+- Color the geometry plots by material see the [documentation]([https://openmc.readthedocs.io/en/stable/usersguide/plots.html]) for an example
+
 
 #### Task 3 - visulise some neutron tracks
+
+The ```example_neutron_flux.py``` file contains a single material, simple hollow sphere geometry, a 14MeV point source and a mesh tally showing neutron flux. Try running this file.
+
+```Python3 example_neutron_flux.py```
+
+You should see the isotropic point source appearing allong with the simple geometry.
+
+- Try changing the "flux" tally for an "absorption" tally and rerun the simulation with the same command.
+
+- Try changing the Li6 enrichment of the material and compare the absorption of neutrons with the natural Li6 enrichment.
+
+There is another example neutron flux file with a more realistic neutron source. Take a look at ```example_neutron_flux_plasma_source.py``` and run the file.
+
+```Python3 example_neutron_flux_plasma_source.py```
+
 
 #### Task 4 - Find the neutron spectra (and leakage)
 
