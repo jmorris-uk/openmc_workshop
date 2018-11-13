@@ -102,20 +102,25 @@ The ```example_neutron_flux.py``` file contains a single material, simple hollow
 
 ```Python3 example_neutron_flux.py```
 
-You should see the isotropic point source appearing allong with the simple geometry.
+You should see the isotropic point source appearing allong with the simple sphere geometry.
 
 - Try changing the "flux" tally for an "absorption" tally and rerun the simulation with the same command.
 
 - Try changing the Li6 enrichment of the material and compare the absorption of neutrons with the natural Li6 enrichment.
 
-There is another example neutron flux file with a more realistic neutron source. Take a look at ```example_neutron_flux_plasma_source.py``` and run the file.
+There is another example neutron flux file with the simple tokamak geometry. Take a look at ```example_neutron_flux_tokamak.py``` and run the file.
 
-```Python3 example_neutron_flux_plasma_source.py```
+```Python3 example_neutron_flux_tokamak.py```
 
+The model still has a point source but now it is located at x=150 y=0 z=0 and central column shielding is noticeable on the flux, absorption and tritium production mesh tallies.
 
 #### Task 4 - Find the neutron spectra (and leakage)
 
+
+
 #### Task 5 - Find the tritium production
+
+
 
 #### Task 6 - Find the DPA
 

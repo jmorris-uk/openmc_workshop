@@ -16,7 +16,7 @@ all_stable_isotope_list = ['Ag107', 'Ag109', 'Al27', 'Ar36', 'Ar38', 'Ar40', 'As
 
 
 #therefore we use this list instead
-candiate_fusion_neutron_multipiers_list = ['Pb204','Pb206','Pb207','Pb208','Be9']
+candiate_fusion_neutron_multipiers_list = ['Be9','Pb204','Pb206']#,'Pb207','Pb208']
 candiate_fusion_tritium_producers_list = ['Li6','Li7']
 
 MT_number = 16 # MT number 16 is (n,n2) reaction

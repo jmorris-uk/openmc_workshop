@@ -106,3 +106,6 @@ venv.bak/
 
 *.h5
 *.html
+*.xml
+*.out
+.vcode/
