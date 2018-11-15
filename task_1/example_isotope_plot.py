@@ -19,22 +19,22 @@ all_stable_isotope_list = ['Ag107', 'Ag109', 'Al27', 'Ar36', 'Ar38', 'Ar40', 'As
 candiate_fusion_neutron_multipiers_list = ['Be9','Pb204','Pb206']#,'Pb207','Pb208']
 candiate_fusion_tritium_producers_list = ['Li6','Li7']
 
-MT_number = 16 # MT number 16 is (n,n2) reaction
+MT_number = 16 # MT number 16 is (n,2n) reaction others can be found https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf
 traces=[]
 
 for isotope_name in tqdm(candiate_fusion_neutron_multipiers_list):
 
       try:
-            isotope_ojbect = openmc.data.IncidentNeutron.from_hdf5('/home/jshim/openmc/nndc_hdf5/'+isotope_name+'.h5') # you may have to change this directory
-            energy = isotope_ojbect.energy['294K'] # 294K is the temperature
-            cross_section = isotope_ojbect[MT_number].xs['294K'](energy) 
-            traces.append(Scatter(x=energy, 
-                                  y=cross_section, 
-                                  mode = 'lines', 
+            isotope_object = openmc.data.IncidentNeutron.from_hdf5('/home/jshim/openmc/nndc_hdf5/'+isotope_name+'.h5') # you may have to change this directory
+            energy = isotope_object.energy['294K'] # 294K is the temperature
+            cross_section = isotope_object[MT_number].xs['294K'](energy)
+            traces.append(Scatter(x=energy,
+                                  y=cross_section,
+                                  mode = 'lines',
                                   name=isotope_name+' MT '+ str(MT_number)
                                  )
-                         )   
-            print('isotope ', isotope_name, 'found cross section')                         
+                         )
+            print('isotope ', isotope_name, 'found cross section')
       except:
             print('isotope ', isotope_name, 'failed to find cross section')
 
@@ -52,4 +52,3 @@ layout = {'title':'Isotope cross sections MT '+ str(MT_number),
 
 plot({'data':traces,
       'layout':layout})
-

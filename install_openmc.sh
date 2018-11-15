@@ -7,12 +7,12 @@ sudo apt-get --yes upgrade
 sudo apt-get --yes install gfortran g++ cmake libhdf5-dev git
 
 cd /opt
-git clone https://github.com/mit-crpg/openmc 
-cd openmc 
-mkdir bld 
+git clone https://github.com/mit-crpg/openmc
+cd openmc
+mkdir bld
 cd bld
-cmake .. -DCMAKE_INSTALL_PREFIX=.. 
-make -j8 
+cmake .. -DCMAKE_INSTALL_PREFIX=..
+make -j8
 make install
 
 sudo apt-get --yes install python3-pip python3-tk
@@ -40,7 +40,7 @@ pip3 install pytest-cov --user
 pip3 install pylint --user
 
 cd /opt/openmc
-sudo python3 setup.py install
+sudo python3 setup.py install ## pip install might work betters
 sudo cp /opt/openmc/bin/openmc /usr/bin
 
 sudo python3 /opt/openmc/scripts/openmc-get-nndc-data -b
