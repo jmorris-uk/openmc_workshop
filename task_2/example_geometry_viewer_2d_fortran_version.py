@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""example_isotope_plot.py: plots few 2D views of a simple tokamak geometry ."""
+"""example_isotope_plot.py: plots few 2D views of a simple geometry ."""
 
 __author__      = "Jonathan Shimwell"
 

@@ -19,6 +19,7 @@ def make_materials(enrichment_fraction,breeder_material_name,temperature_in_C):
     natural_breeder_material =     openmc.Material(2, "natural_breeder_material") 
     breeder_material =     openmc.Material(1, "breeder_material") 
 
+
     if breeder_material_name == 'PbLi':
 
         #Pb84.2Li15.8 is the eutectic ratio, this could be a varible
@@ -60,6 +61,7 @@ def make_materials(enrichment_fraction,breeder_material_name,temperature_in_C):
         breeder_material.add_element('Be', 1.0*BeF_atom_ratio,'ao')
         breeder_material.add_element('F', 2.0*BeF_atom_ratio,'ao')
         breeder_material.set_density('atom/b-cm',atoms_per_barn_cm)  
+
 
     if breeder_material_name == 'Li':
 
@@ -127,16 +129,21 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     tallies = openmc.Tallies()
 
     cell_filter = openmc.CellFilter(breeder_blanket_cell)
+    particle_filter = openmc.ParticleFilter([1]) #1 is neutron, 2 is photon
     tbr_tally = openmc.Tally(1,name='TBR')
-    tbr_tally.filters = [cell_filter]
+    tbr_tally.filters = [cell_filter,particle_filter]
     tbr_tally.scores = ['205']
+
     tallies.append(tbr_tally)
 
     surface_filter = openmc.SurfaceFilter(breeder_blanket_outer_surface)
-    leak_tally = openmc.Tally(2,name='Leakage')
-    leak_tally.filters = [surface_filter]
+    leak_tally = openmc.Tally(2,name='leakage')
+    particle_filter = openmc.ParticleFilter([1])
+    leak_tally.filters = [surface_filter,particle_filter]
     leak_tally.scores = ['current']
     tallies.append(leak_tally)
+
+    # energy_filter = openmc.EnergyFilter([0.0, 4.0, 1.0e6]) # such an energy filter can be used to get the neutron spectra
 
     #RUN OPENMC #
     model = openmc.model.Model(geom, mats, sett, tallies)
@@ -147,10 +154,11 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     tbr_tally_result = tbr_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
     tbr_tally_std_dev = tbr_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list 
 
-    leak_tally = sp.get_tally(name='Leakage')
+    leak_tally = sp.get_tally(name='leakage')
     leak_tally_result = leak_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
-    leak_tally_std_dev = leak_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list     
-    
+    leak_tally_std_dev = leak_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list    
+
+
     return {'enrichment_fraction':enrichment_fraction,
             'tbr_tally':tbr_tally_result, 
             'tbr_tally_std_dev':tbr_tally_std_dev,
@@ -162,41 +170,26 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
             'temperature_in_C':temperature_in_C
            }
 
-enrichment_fraction=0.07589
+natural_enrichment_fraction=0.07589
 #comparison TBR simulations https://link.springer.com/article/10.1023/B:JOFE.0000021555.70423.f1
+
 results=[]
-for enrichment_fraction in np.linspace(start=0,stop=1,num=40):
-    results.append(make_materials_geometry_tallies(batches=2,
-                                                   enrichment_fraction=enrichment_fraction,
-                                                   inner_radius=500,
-                                                   thickness=100,
-                                                   breeder_material_name = 'Flibe', #Flibe or Li or PbLi
-                                                   temperature_in_C=300
-                                                   ))
+for breeder_material_name in ['Flibe', 'Li', 'PbLi']:
+    for enrichment_fraction in np.linspace(start=0,stop=1,num=20):
+        for inner_radius in np.linspace(start=100,stop=10000,num=20):
+            for thickness in np.linspace(start=50,stop=500,num=20):
+                results.append(make_materials_geometry_tallies(batches=3,
+                                                        enrichment_fraction=enrichment_fraction,
+                                                        inner_radius=500,
+                                                        thickness=100,
+                                                        breeder_material_name = breeder_material_name, # 'Flibe', #Flibe or Li or PbLi
+                                                        temperature_in_C=300
+                                                        ))
 
-print(results)
-with open('simulation_results.json', 'w') as file_object:
-    json.dump(results, file_object)
+               
+with open('simulation_results.json', 'a') as file_object:
+    json.dump(results, file_object, indent=2)
 
-# PLOTS RESULTS #
-trace1= Scatter(x=[entry['enrichment_fraction'] for entry in results], 
-                y=[entry['tbr_tally'] for entry in results],
-                mode = 'lines',
-                name = 'tbr_tally',                
-                error_y= {'array':[entry['tbr_tally_std_dev'] for entry in results]},
-                )
 
-trace2= Scatter(x=[entry['enrichment_fraction'] for entry in results], 
-                y=[entry['leak_tally'] for entry in results],
-                mode = 'lines',
-                name = 'leak_tally',
-                error_y= {'array':[entry['leak_tally_st_dev'] for entry in results]},
-                )                
 
-layout = {'title':'Tritium production and neutron leakage',
-          'xaxis':{'title':'Li6 enrichment fraction'},
-          'yaxis':{'title':'TBR'},
-         }
-plot({'data':[trace1,trace2],
-      'layout':layout})
 

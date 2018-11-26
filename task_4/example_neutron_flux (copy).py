@@ -48,11 +48,13 @@ geom = openmc.Geometry(universe)
 sett = openmc.Settings()
 batches = 1
 sett.batches = batches
-sett.inactive = 50
+sett.inactive = 0
 sett.particles = 5000
+sett.particle = "neutron"
+sett.track = (1,2,4)
 sett.run_mode = 'fixed source'
 
-# Create an initial uniform spatial source distribution over fissionable zones
+# creates a 14MeV point source
 source = openmc.Source()
 source.space = openmc.stats.Point((0,0,0))
 source.angle = openmc.stats.Isotropic()
@@ -82,6 +84,7 @@ tallies.append(mesh_tally)
 # Run OpenMC!
 model = openmc.model.Model(geom, mats, sett, tallies)
 model.run()
+#model.run(tracks=True) # use with openmc-track-to-vtk
 
 # open the results file
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')

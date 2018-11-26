@@ -109,3 +109,6 @@ venv.bak/
 *.xml
 *.out
 .vcode/
+*.vti
+*.ppm
+*.png

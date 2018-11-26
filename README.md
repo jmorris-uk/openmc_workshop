@@ -71,7 +71,7 @@ There are two methods of producing 2D slice views of the geometry
 
 The first example 2D slice plot can be produced by running
 
-```cd task_3```
+```cd task_2```
 
 ```python3 example_geometry_viewer.py```
 
@@ -98,6 +98,21 @@ Now try adding a first wall and shielded central column to the model using the O
 
 #### Task 3 - visulise some neutron tracks
 
+The ```example_neutron_creation.py```file shows you how to access the statepoint file created by a simulation. In this example the energy and trajectory of all the simulated neutrons is exstracted. Two plots are created, one shows the energy distribution and one shows the initial neutron trajectory.
+
+Run ```python3 example_neutron_creation.py``` to produce the two graphs.
+
+The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the center of the geometry. The objective of this task is to create some 3D particle tracks and visulise them with the geometry.
+
+Open up ```atom example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
+
+Run the script with the command
+```python3 example_neutron_tracks.py```
+
+Use paraview to load the geometry file and the track files. Parview can also be used to slice and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium.
+
+#### Task 4 - Find the neutron spectra (and leakage)
+
 The ```example_neutron_flux.py``` file contains a single material, simple hollow sphere geometry, a 14MeV point source and a mesh tally showing neutron flux. Try running this file.
 
 ```Python3 example_neutron_flux.py```
@@ -114,7 +129,7 @@ There is another example neutron flux file with the simple tokamak geometry. Tak
 
 The model still has a point source but now it is located at x=150 y=0 z=0 and central column shielding is noticeable on the flux, absorption and tritium production mesh tallies.
 
-#### Task 4 - Find the neutron spectra (and leakage)
+
 
 
 
