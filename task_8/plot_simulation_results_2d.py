@@ -17,9 +17,9 @@ with open('simulation_results.json') as f:
 
 results_df = pd.DataFrame(results)
 
-flibe = results_df[results_df['breeder_material_name']=='Flibe']
+flibe = results_df[results_df['breeder_material_name']=='F2Li2BeF2']
 Li = results_df[results_df['breeder_material_name']=='Li']
-PbLi = results_df[results_df['breeder_material_name']=='PbLi']
+PbLi = results_df[results_df['breeder_material_name']=='Pb84.2Li15.8']
 
 text_value_flibe = []
 for e,t,i,tbr in zip(flibe['enrichment_fraction'],flibe['thickness'],flibe['inner_radius'],flibe['tbr_tally']):
@@ -130,7 +130,7 @@ traces_ir.append( Scatter(x=PbLi['inner_radius'],
 
 layout_ir = {'title':'Tritium production and inner radius',
             'hovermode':'closest',
-          'xaxis':{'title':'inner_radius'},
+          'xaxis':{'title':'Inner radius (cm)'},
           'yaxis':{'title':'TBR'},
          }
 plot({'data':traces_ir,
@@ -176,7 +176,7 @@ traces_t.append( Scatter(x=PbLi['thickness'],
 
 layout_t = {'title':'Tritium production and thickness',
             'hovermode':'closest',
-            'xaxis':{'title':'thickness'},
+            'xaxis':{'title':'Thickness (cm)'},
             'yaxis':{'title':'TBR'},
             }
 plot({'data':traces_t,

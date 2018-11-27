@@ -18,9 +18,10 @@ with open('simulation_results.json') as f:
 
 results_df = pd.DataFrame(results)
 
-flibe = results_df[results_df['breeder_material_name']=='Flibe']
+
+flibe = results_df[results_df['breeder_material_name']=='F2Li2BeF2']
 Li = results_df[results_df['breeder_material_name']=='Li']
-PbLi = results_df[results_df['breeder_material_name']=='PbLi']
+PbLi = results_df[results_df['breeder_material_name']=='Pb84.2Li15.8']
 
 text_value_flibe = []
 for e,t,i,tbr in zip(flibe['enrichment_fraction'],flibe['thickness'],flibe['inner_radius'],flibe['tbr_tally']):
@@ -176,4 +177,5 @@ layout['annotations'] = annotations
 
 
 plot({'data':traces,
-      'layout':layout})
+      'layout':layout},
+      filename='TBR_for_different_materials.html')

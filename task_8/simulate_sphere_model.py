@@ -60,7 +60,15 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
 
     for e, en in zip(elements, element_numbers):
         natural_breeder_material.add_element(e, en,'ao')
-    print('natural_breeder_material',natural_breeder_material)
+
+    for e, en in zip(elements, element_numbers):
+        if e == 'Li':
+            breeder_material.add_nuclide('Li6', en * enrichment_fraction, 'ao')
+            breeder_material.add_nuclide('Li7', en * (1.0-enrichment_fraction), 'ao')  
+
+        else:
+            breeder_material.add_element(e, en,'ao')    
+
 
     if breeder_material_name == 'Pb84.2Li15.8':
         #Pb84.2Li15.8 is the eutectic ratio, this could be a varible
@@ -79,14 +87,6 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
     natural_breeder_material.set_density('g/cm3', density_of_natural_material_at_temperature)
     atom_densities_dict = natural_breeder_material.get_nuclide_atom_densities()
     atoms_per_barn_cm = sum([i[1] for i in atom_densities_dict.values()])
-
-    for e, en in zip(elements, element_numbers):
-        if e == 'Li':
-            breeder_material.add_nuclide('Li6', en * enrichment_fraction, 'ao')
-            breeder_material.add_nuclide('Li7', en * (1.0-enrichment_fraction), 'ao')  
-
-        else:
-            natural_breeder_material.add_element(e, en,'ao')
 
     breeder_material.set_density('atom/b-cm',atoms_per_barn_cm) 
 
@@ -206,10 +206,11 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
 natural_enrichment_fraction=0.07589
 #comparison TBR simulations https://link.springer.com/article/10.1023/B:JOFE.0000021555.70423.f1
 
-with open('simulation_results.json', 'w') as file_object:
-    file_object.write('[')
-for breeder_material_name in ['F2Li2BeF2', 'Li', 'Pb84.2Li15.']:
-    for x in range(0,10):
+
+
+results = []
+for breeder_material_name in ['F2Li2BeF2', 'Li', 'Pb84.2Li15.8']:
+    for x in range(0,100):
         enrichment_fraction = random.uniform(0, 1)
         inner_radius = random.uniform(1, 1000)
         thickness = random.uniform(1, 500)
@@ -217,22 +218,21 @@ for breeder_material_name in ['F2Li2BeF2', 'Li', 'Pb84.2Li15.']:
         # for enrichment_fraction in np.linspace(start=0,stop=1,num=10):
         #     for inner_radius in np.linspace(start=100,stop=10000,num=10):
         #         for thickness in np.linspace(start=50,stop=500,num=10):
-        results = (make_materials_geometry_tallies(batches=4,
+        result = make_materials_geometry_tallies(batches=4,
                                                 enrichment_fraction=enrichment_fraction,
                                                 inner_radius=inner_radius,
                                                 thickness=thickness,
-                                                breeder_material_name = breeder_material_name, # 'Flibe', #Flibe or Li or PbLi
-                                                temperature_in_C=300
-                                                ))
-
-        print(results)
-        with open('simulation_results.json', 'a') as file_object:
-            json.dump(results, file_object, indent=2)
-            file_object.write(',')
+                                                breeder_material_name = breeder_material_name, 
+                                                temperature_in_C=500
+                                                )
+        print(result)
+        results.append(result)
 
 
-with open('simulation_results.json', 'a') as file_object:
-    file_object.write(']')
+
+with open('simulation_results.json', 'w') as file_object:
+    json.dump(results, file_object, indent=2)
+       
 
 
 
