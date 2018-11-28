@@ -10,175 +10,64 @@ from plotly.graph_objs import Scatter, Layout
 import json
 import pandas as pd
 
-with open('simulation_results.json') as f:
+with open('simulation_results8000.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #
 
 results_df = pd.DataFrame(results)
 
-flibe = results_df[results_df['breeder_material_name']=='F2Li2BeF2']
-Li = results_df[results_df['breeder_material_name']=='Li']
-PbLi = results_df[results_df['breeder_material_name']=='Pb84.2Li15.8']
+for tally_name in ['leak_tally','tbr_tally']:
+      tally_name_error = tally_name+'_std_dev'
 
-text_value_flibe = []
-for e,t,i,tbr in zip(flibe['enrichment_fraction'],flibe['thickness'],flibe['inner_radius'],flibe['tbr_tally']):
-    text_value_flibe.append('TBR =' +str(tbr)+'<br>'+
-                      'enrichment fraction ='+str(e) +'<br>'+
-                      'thickness ='+str(t) +'<br>'+
-                      'inner radius ='+str(i)                                            
-                      )
+      text_values = {}
 
-text_value_li = []
-for e,t,i,tbr in zip(Li['enrichment_fraction'],Li['thickness'],Li['inner_radius'],Li['tbr_tally']):
-    text_value_li.append('TBR =' +str(tbr)+'<br>'+
-                      'enrichment fraction ='+str(e) +'<br>'+
-                      'thickness ='+str(t) +'<br>'+
-                      'inner radius ='+str(i)                                            
-                      )
+      for material_name in ['F2Li2BeF2','Li','Pb84.2Li15.8','Li4SiO4']:
 
-text_value_PbLi = []
-for e,t,i,tbr in zip(PbLi['enrichment_fraction'],PbLi['thickness'],PbLi['inner_radius'],PbLi['tbr_tally']):
-    text_value_PbLi.append('TBR =' +str(tbr)+'<br>'+
-                      'enrichment fraction ='+str(e) +'<br>'+
-                      'thickness ='+str(t) +'<br>'+
-                      'inner radius ='+str(i)                                            
-                      )                      
+            df_filtered_by_mat = results_df[results_df['breeder_material_name']==material_name]
+
+            text_value = []
+            for e,t,i,tbr, leak in zip(df_filtered_by_mat['enrichment_fraction'],
+                              df_filtered_by_mat['thickness'],
+                              df_filtered_by_mat['inner_radius'],
+                              df_filtered_by_mat['tbr_tally'],
+                              df_filtered_by_mat['leak_tally']):
+                  text_value.append('TBR =' +str(tbr)+'<br>'+
+                                    'Leakage =' +str(leak)+'<br>'+
+                                    'enrichment fraction ='+str(e) +'<br>'+
+                                    'thickness ='+str(t) +'<br>'+
+                                    'inner radius ='+str(i)                                            
+                                    )
+            text_values[material_name] = text_value
 
 
+      traces={}
+      for x_axis_name in ['enrichment_fraction','inner_radius','thickness']:
+            traces[x_axis_name] = []
 
+            for material_name in ['F2Li2BeF2','Li','Pb84.2Li15.8','Li4SiO4']:
 
+                  df_filtered_by_mat = results_df[results_df['breeder_material_name']==material_name]
 
+                  traces[x_axis_name].append(Scatter(x=df_filtered_by_mat[x_axis_name], 
+                                          y=df_filtered_by_mat[tally_name] ,
+                                          mode = 'markers',
+                                          hoverinfo='text' ,
+                                          text=text_values[material_name],                       
+                                          name = material_name,                
+                                          error_y= {'array':df_filtered_by_mat[tally_name_error]},
+                                          )
+                                    )
 
-traces_ef=[]
-traces_ef.append( Scatter(x=flibe['enrichment_fraction'], 
-                       y=flibe['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_flibe,                       
-                       name = 'FLiBe',                
-                       error_y= {'array':flibe['tbr_tally_std_dev']},
-                       )
-              )
+      for x_axis_name in ['enrichment_fraction','inner_radius','thickness']:
 
-traces_ef.append( Scatter(x=Li['enrichment_fraction'], 
-                       y=Li['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_li,                       
-                       name = 'Li',                
-                       error_y= {'array':Li['tbr_tally_std_dev']},
-                       )
-              )
+            layout_ef = {'title':tally_name+' and '+x_axis_name,
+                        'hovermode':'closest',
+                  'xaxis':{'title':x_axis_name},
+                  'yaxis':{'title':tally_name},
+                  }
+            plot({'data':traces[x_axis_name],
+                  'layout':layout_ef},
+                  filename=tally_name+'_vs_'+x_axis_name+'.html'
+                  )
 
-traces_ef.append( Scatter(x=PbLi['enrichment_fraction'], 
-                       y=PbLi['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_PbLi,                       
-                       name = 'PbLi',                
-                       error_y= {'array':PbLi['tbr_tally_std_dev']},
-                       )
-              ) 
-
-layout_ef = {'title':'Tritium production and Li6 enrichment fraction',
-            'hovermode':'closest',
-          'xaxis':{'title':'Li6 enrichment fraction'},
-          'yaxis':{'title':'TBR'},
-         }
-plot({'data':traces_ef,
-      'layout':layout_ef},
-      filename='TBR_vs_erichment_fraction.html'
-      )
-
-
-
-
-
-
-
-traces_ir=[]
-traces_ir.append( Scatter(x=flibe['inner_radius'], 
-                       y=flibe['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_flibe,                          
-                       name = 'FLiBe',                
-                       error_y= {'array':flibe['tbr_tally_std_dev']},
-                       )
-              )
-
-traces_ir.append( Scatter(x=Li['inner_radius'], 
-                       y=Li['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_li,                          
-                       name = 'Li',                
-                       error_y= {'array':Li['tbr_tally_std_dev']},
-                       )
-              )
-
-traces_ir.append( Scatter(x=PbLi['inner_radius'], 
-                       y=PbLi['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_PbLi,                          
-                       name = 'PbLi',                
-                       error_y= {'array':PbLi['tbr_tally_std_dev']},
-                       )
-              ) 
-
-layout_ir = {'title':'Tritium production and inner radius',
-            'hovermode':'closest',
-          'xaxis':{'title':'Inner radius (cm)'},
-          'yaxis':{'title':'TBR'},
-         }
-plot({'data':traces_ir,
-      'layout':layout_ir},
-      filename='TBR_vs_inner_radius.html')
-
-
-
-
-
-
-
-traces_t=[]
-traces_t.append( Scatter(x=flibe['thickness'], 
-                       y=flibe['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_flibe,                          
-                       name = 'FLiBe',                
-                       error_y= {'array':flibe['tbr_tally_std_dev']},
-                       )
-              )
-
-traces_t.append( Scatter(x=Li['thickness'], 
-                       y=Li['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_li,                          
-                       name = 'Li',                
-                       error_y= {'array':Li['tbr_tally_std_dev']},
-                       )
-              )
-
-traces_t.append( Scatter(x=PbLi['thickness'], 
-                       y=PbLi['tbr_tally'] ,
-                       mode = 'markers',
-                       hoverinfo='text' ,
-                       text=text_value_PbLi,                          
-                       name = 'PbLi',                
-                       error_y= {'array':PbLi['tbr_tally_std_dev']},
-                       )
-              ) 
-
-layout_t = {'title':'Tritium production and thickness',
-            'hovermode':'closest',
-            'xaxis':{'title':'Thickness (cm)'},
-            'yaxis':{'title':'TBR'},
-            }
-plot({'data':traces_t,
-      'layout':layout_t},
-      filename='TBR_vs_thickness.html')

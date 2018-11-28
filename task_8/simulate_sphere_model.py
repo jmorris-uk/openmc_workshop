@@ -1,23 +1,32 @@
 #!/usr/bin/env python3
 
 """example_isotope_plot.py: plots few 2D views of a simple tokamak geometry with neutron flux."""
+""" run with python3 simulate_sphere_model.py | tqdm >> /dev/null """
 
 __author__      = "Jonathan Shimwell"
 
+
+import re 
 import openmc
 import os
 import json
 import numpy as np
 from numpy import random
+from tqdm import tqdm
+import sys
 
 #import chemical_formula #from pyEQL github but does not support floats in equation
     # element_numbers = chemical_formula.get_element_numbers(breeder_material_name)
     # elements =chemical_formula.get_elements(breeder_material_name)
 
 
-import re 
 
-
+def calculate_crystal_structure_density(material,atoms_per_unit_cell,volume_of_unit_cell_cm3):
+      molar_mass = material.average_molar_mass*len(material.nuclides)
+      atomic_mass_unit_in_g = 1.660539040e-24
+      density_g_per_cm3 = molar_mass * atomic_mass_unit_in_g * atoms_per_unit_cell / volume_of_unit_cell_cm3
+      #print('density =',density_g_per_cm3)
+      return density_g_per_cm3
 
 def read_chem_eq(chemical_equation):
         return [a for a in re.split(r'([A-Z][a-z]*)', chemical_equation) if a]
@@ -65,7 +74,6 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
         if e == 'Li':
             breeder_material.add_nuclide('Li6', en * enrichment_fraction, 'ao')
             breeder_material.add_nuclide('Li7', en * (1.0-enrichment_fraction), 'ao')  
-
         else:
             breeder_material.add_element(e, en,'ao')    
 
@@ -84,26 +92,32 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
 
         density_of_natural_material_at_temperature = 0.515 - 1.01e-4 * (temperature_in_C - 200) # valid between 200 - 1600 C source http://aries.ucsd.edu/LIB/PROPS/PANOS/li.html
 
+    if breeder_material_name == 'Li4SiO4':
+
+        density_of_natural_material_at_temperature = calculate_crystal_structure_density(natural_breeder_material,14,1.1543e-21)
+        print('density_of_natural_material_at_temperature',density_of_natural_material_at_temperature)
+
+
     natural_breeder_material.set_density('g/cm3', density_of_natural_material_at_temperature)
     atom_densities_dict = natural_breeder_material.get_nuclide_atom_densities()
     atoms_per_barn_cm = sum([i[1] for i in atom_densities_dict.values()])
-
+    print('atoms_per_barn_cm',atoms_per_barn_cm)
     breeder_material.set_density('atom/b-cm',atoms_per_barn_cm) 
 
     mats = openmc.Materials([breeder_material])
     print(breeder_material)
+    print(natural_breeder_material)
     return mats
 
 def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thickness,breeder_material_name,temperature_in_C):
-    print('simulating ',batches,enrichment_fraction,inner_radius,thickness,breeder_material_name)
+    #print('simulating ',batches,enrichment_fraction,inner_radius,thickness,breeder_material_name)
 
     #MATERIALS#
 
     mats = make_materials(enrichment_fraction,breeder_material_name,temperature_in_C)
     for mat in mats:
-        print(mat)
+        #print(mat)
         if mat.name == 'breeder_material':
-            print('found breeder materials')
             breeder_material = mat
 
     #GEOMETRY#
@@ -128,14 +142,14 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     sett = openmc.Settings()
     # batches = 3
     sett.batches = batches
-    sett.inactive = 50
+    sett.inactive = 1
     sett.particles = 5000
     sett.run_mode = 'fixed source'
 
     source = openmc.Source()
     source.space = openmc.stats.Point((0,0,0))
     source.angle = openmc.stats.Isotropic()
-    source.energy = openmc.stats.Discrete([14e6], [1])
+    source.energy = openmc.stats.Discrete([14.08e6], [1])
     sett.source = source
 
     #TALLIES#
@@ -167,6 +181,7 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
 
     #RUN OPENMC #
     model = openmc.model.Model(geom, mats, sett, tallies)
+    
     model.run()
     sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
@@ -188,7 +203,7 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
             'tbr_tally':tbr_tally_result, 
             'tbr_tally_std_dev':tbr_tally_std_dev,
             'leak_tally':leak_tally_result,
-            'leak_tally_st_dev':leak_tally_std_dev,
+            'leak_tally_std_dev':leak_tally_std_dev,
             'heat_tally':heat_tally_result,
             'heat_tally_std_dev':heat_tally_std_dev,
             'inner_radius':inner_radius,
@@ -209,28 +224,24 @@ natural_enrichment_fraction=0.07589
 
 
 results = []
-for breeder_material_name in ['F2Li2BeF2', 'Li', 'Pb84.2Li15.8']:
-    for x in range(0,100):
-        enrichment_fraction = random.uniform(0, 1)
-        inner_radius = random.uniform(1, 1000)
-        thickness = random.uniform(1, 500)
-
-        # for enrichment_fraction in np.linspace(start=0,stop=1,num=10):
-        #     for inner_radius in np.linspace(start=100,stop=10000,num=10):
-        #         for thickness in np.linspace(start=50,stop=500,num=10):
-        result = make_materials_geometry_tallies(batches=4,
-                                                enrichment_fraction=enrichment_fraction,
-                                                inner_radius=inner_radius,
-                                                thickness=thickness,
-                                                breeder_material_name = breeder_material_name, 
-                                                temperature_in_C=500
-                                                )
-        print(result)
-        results.append(result)
+num_sims = 8000
+for i in tqdm(range(0,num_sims)):
+    breeder_material_name = random.choice(['Li4SiO4', 'F2Li2BeF2', 'Li', 'Pb84.2Li15.8'])
+    enrichment_fraction = random.uniform(0, 1)
+    inner_radius = random.uniform(1, 500)
+    thickness = random.uniform(1, 500)
+    result = make_materials_geometry_tallies(batches=4,
+                                             enrichment_fraction=enrichment_fraction,
+                                             inner_radius=inner_radius,
+                                             thickness=thickness,
+                                             breeder_material_name = breeder_material_name, 
+                                             temperature_in_C=500
+                                             )
+    results.append(result)
 
 
 
-with open('simulation_results.json', 'w') as file_object:
+with open('simulation_results'+str(num_sims)+'.json', 'w') as file_object:
     json.dump(results, file_object, indent=2)
        
 

@@ -132,6 +132,17 @@ traces.append(generate_material_trace(mat_F2Li2BeF2,4))
 mat_Li4SiO4 = make_materials(0.6, 'Li4SiO4', 500)
 traces.append(generate_material_trace(mat_Li4SiO4,4))
 
+mat_Li = make_materials(0.6, 'Li', 500)
+traces.append(generate_material_trace(mat_Li,1))
+
+mat_Pb84Li15 = make_materials(0.6, 'Pb84.2Li15.8', 500)
+traces.append(generate_material_trace(mat_Pb84Li15,1))
+
+mat_F2Li2BeF2 = make_materials(0.6, 'F2Li2BeF2', 500)
+traces.append(generate_material_trace(mat_F2Li2BeF2,1))
+
+mat_Li4SiO4 = make_materials(0.6, 'Li4SiO4', 500)
+traces.append(generate_material_trace(mat_Li4SiO4,1))
 
 
 mat_Li = make_materials(0.6, 'Li', 500)
