@@ -10,7 +10,7 @@ from plotly.graph_objs import Scatter, Layout
 import json
 import pandas as pd
 
-with open('simulation_results8000.json') as f:
+with open('simulation_results20000.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #

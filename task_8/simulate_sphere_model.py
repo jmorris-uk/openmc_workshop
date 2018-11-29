@@ -224,13 +224,13 @@ natural_enrichment_fraction=0.07589
 
 
 results = []
-num_sims = 8000
+num_sims = 20000
 for i in tqdm(range(0,num_sims)):
     breeder_material_name = random.choice(['Li4SiO4', 'F2Li2BeF2', 'Li', 'Pb84.2Li15.8'])
     enrichment_fraction = random.uniform(0, 1)
     inner_radius = random.uniform(1, 500)
     thickness = random.uniform(1, 500)
-    result = make_materials_geometry_tallies(batches=4,
+    result = make_materials_geometry_tallies(batches=10,
                                              enrichment_fraction=enrichment_fraction,
                                              inner_radius=inner_radius,
                                              thickness=thickness,
@@ -238,6 +238,7 @@ for i in tqdm(range(0,num_sims)):
                                              temperature_in_C=500
                                              )
     results.append(result)
+
 
 
 
