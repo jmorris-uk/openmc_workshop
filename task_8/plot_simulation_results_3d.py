@@ -11,7 +11,7 @@ import json
 import pandas as pd
 import numpy as np
 
-with open('simulation_results4000.json') as f:
+with open('simulation_results20000.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #
