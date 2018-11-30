@@ -63,9 +63,9 @@ model.run()
 
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
-print('energy of neutrons =',sp.source['E']) # these neutrons are all created with a Fission Watt spectrum
+print('energy of neutrons =',sp.source['E']) # these neutrons are all created
 
-energy_bins = np.logspace(3,7)
+energy_bins = np.logspace(3,7) #energy range could b changed
 
 # Calculate pdf for source energies
 probability, bin_edges = np.histogram(sp.source['E'], energy_bins, density=True)
@@ -77,7 +77,8 @@ traces.append(Scatter(x=energy_bins[:-1],
                        y=probability*np.diff(energy_bins),
                        line={'shape':'hv'},
                        hoverinfo='text' ,                       
-                       name = 'PbLi',                
+                       name = 'neutron direction',                
+
                       )
               ) 
 
@@ -89,7 +90,7 @@ layout_ef = {'title':'neutron energy',
 
 plot({'data':traces,
       'layout':layout_ef},
-      filename='TBR_vs_erichment_fraction.html'
+      filename='particle_energy_histogram.html'
       )
 
 
@@ -100,4 +101,4 @@ fig = create_quiver(sp.source['xyz'][:,0], sp.source['xyz'][:,1],
                     sp.source['uvw'][:,0], sp.source['uvw'][:,1],
                     arrow_scale = 0.1)
 
-plot(fig)
+plot(fig, filename='particle_directions.html')

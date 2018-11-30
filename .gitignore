@@ -112,3 +112,5 @@ venv.bak/
 *.vti
 *.ppm
 *.png
+*.pvtp
+*.vtp
