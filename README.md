@@ -3,41 +3,49 @@ A selection of resources for learning openmc with particular focus on simulation
 
 Introduction slides https://slides.com/shimwell/neutronics_workshop
 
-### Acknowledgments
-Fred Thomas for providing examples from the Serpent workshop
-Enrique Miralles Dolz for providing the CSG tokamak model
 
 
 ### Installation
 
-The use of OpenMC for neutronics analysis requires several software packages and data. To avoid installation of these dependancies and compatability issues with different operating systems the entrie workshop is distributed as a portable Docker container. Therefore the installation process consists of two steps.
+The use of OpenMC for neutronics analysis requires several software packages and nuclear data. These have been installed in a Docker container. Therefore the installation process of consists of two steps.
 
 1. Install Docker CE ([windows](https://store.docker.com/editions/community/docker-ce-desktop-windows/plans/docker-ce-desktop-windows-tier?tab=instructions]) ,[linx]([https://docs.docker.com/install/linux/docker-ce/ubuntu/]), [mac]([https://store.docker.com/editions/community/docker-ce-desktop-mac]))
 2. Pull the Docker images from the store by typing  the following command in a terminal window
+
 ```docker pull shimwell/openmc_docker```
 
 ### Running OpenMC with docker
 
 Now that you have the Docker image you can run it by typing the following command in a terminal window.
+
 ```docker run -it openmc```
 
 This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 
 ### Getting started on the tasks
 
-#### Task 1 - plot some fusion relevant cross sections
+- [Task 1 Cross section plotting](#task1)
+- [Task 2 - Building and visualizing the model geometry](#task2)
+- [Task 3 - Visualizing neutron tracks](#task3)
+- [Task 4 - Finding the neutron spectra](#task4)
+- [Task 5 - Finding the tritium production](#task5)
+- [Task 6 - Finding the DPA](#task6)
+- [Task 7 - Finding the best material for shielding neutrons](#task7)
+- [Task 8 - Optimize a breeder blanket for tritium production](#task8)
 
-Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). OpenMC is also able to plot cross sections for isotopes and materials.
+#### <a name="task1"></a>Task 1 - Cross section plotting
 
-from inside the docker container navigate to the task_1 directory and open the first example python script
+Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). However OpenMC is also able to plot cross sections for isotopes and materials.
+
+From inside the docker container navigate to the task_1 directory and open the first example python script
 
 ```cd task_1```
 
 ```atom example_isotope_plot.py```
 
-OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation]([???]). This script will plot a selection of isotopes and certain reactions.
+OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation]([https://openmc.readthedocs.io/en/v0.10.0/examples/nuclear-data.html]). This script will plot a selection of isotopes and certain reactions.
 
-```python3 example_isotope_plot.py```
+```python3 1_example_isotope_plot.py```
 
 You should see an interactive plot of the n,2n cross section for an isotopes of lead and beryllium. To add different reactions to the plot we would need the ENDF reaction number which standard available [here]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf]).
 
@@ -47,39 +55,51 @@ You should see an interactive plot of the n,2n cross section for an isotopes of 
 
 The plot should now show fusion relevant interactions. These are important reactions for breeder blankets as they offer high probability of neutron multiplication and tritium production.
 
-- Try editting ```example_isotope_plot.py``` so that it plots tritium production or neutron multiplication for all the stable isotopes.
+- Try editing ```1_example_isotope_plot.py``` so that it plots tritium production or neutron multiplication for all the stable isotopes.
 
-Elemental properties can also be found with OpenMc. Try plotting tritium production and neutron multiplication using the ```example_element_plot.py``` script
+Elemental properties can also be found with OpenMc. Try opening the script and then plotting tritium production and neutron multiplication using the ```2_example_element_plot.py``` script
+
+```atom 2_example_element_plot.py```
+
+```python3 2_example_element_plot.py```
 
 A nice feature of OpenMc is that is can plot cross sections for more complete materials made from combinations of isotopes. Open the next example python script and edit the script so that it can plot the tritium production and use this to identify the best elements for tritium production and neutron production. Why we might want to avoid some of these elements?
 
-```atom example_material_plot.py```
+```atom 3_example_material_plot.py```
+
+This file shows us how to plot tritium production in Li4SiO4 which is a candidate ceramic breeder blanket material.
+
+ - Try editing ```3_example_material_plot.py``` so that other candidate breeder materials are added to the plot.
+
+ - Produce the plot with the command
+```python3 3_example_material_plot.py```
 
 
-This file shows us how to plot tritium production in Li4SiO4 which is a candiate ceramic breeder blanket material. Try editting ```example_material_plot.py``` a
-so that other candiate breeder materials ae added to the plot. Produce the plot with the command
-
-```python3 example_material_plot.py```
 
 
 
-#### Task 2 - building and visulising the model geometry
 
-OpenMC can provide both 2D and 3D visulisations of the CSG geometry.
 
+#### <a name="task2"></a>Task 2 - Building and visualizing the model geometry
+
+OpenMC can provide both 2D and 3D visualizations of the Constructive Solid Geometry ([CSG](https://en.wikipedia.org/wiki/Constructive_solid_geometry)).
 There are two methods of producing 2D slice views of the geometry
 
-The first example 2D slice plot can be produced by running
+The first example 2D slice plot can be opened and produced by running ...
 
 ```cd task_2```
 
-```python3 example_geometry_viewer.py```
+```atom 1_example_geometry_viewer.py```
 
-Views of the simple model from different angles should appear. Another example script which produces similar results but works better for large models.
+```python3 1_example_geometry_viewer.py```
 
-```python3 example_geometry_viewer_fortran_version.py```
+Views of the simple model from different angles should appear. The second method of producing 2D slice plots works better for large models.
 
-Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples]([https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry]) and the [documentmentation]([https://openmc.readthedocs.io/en/stable/usersguide/geometry.html]) for CSG opperations.
+```atom 2_example_geometry_viewer_fortran_version.py```
+
+```python3 2_example_geometry_viewer_fortran_version.py```
+
+Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples]([https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry]) and the [documentation]([https://openmc.readthedocs.io/en/stable/usersguide/geometry.html]) for CSG operations.
 
 - Change the inner radius of the blanket to 500cm
 
@@ -91,12 +111,23 @@ Now try adding a first wall and shielded central column to the model using the O
 
 - Try creating a material from pure copper and assign it to the central column
 
-- Try creating a homogenised material from 10% water and 90% steel and assign it to the first wall and the shield.
+- Try creating a homogenized material from 10% water and 90% steel and assign it to the first wall and the shield.
 
 - Color the geometry plots by material see the [documentation]([https://openmc.readthedocs.io/en/stable/usersguide/plots.html]) for an example
 
+By the time you have added you extra geometry components your solution should look similar to the geometry contained in the next example script.
 
-#### Task 3 - visulise some neutron tracks
+```atom 3_example_geometry_viewer_2d_tokamak.py```
+
+The next example script shows a simple geometry that can be viewed in 3D using paraview.
+
+```python3 4_example_geometry_viewer_3d_version.py ```
+
+select "id" and "surface" in the dropdown menus and click apply to view the geometry. Then use the threshold and slice operations to view the geometry.
+
+- Try combining the last two scripts so that you can visulise the tokamak model in 3D.
+
+#### <a name="task3"></a>Task 3 - Visualizing neutron tracks
 
 The ```example_neutron_creation.py```file shows you how to access the statepoint file created by a simulation. In this example the energy and trajectory of all the simulated neutrons is exstracted. Two plots are created, one shows the energy distribution and one shows the initial neutron trajectory.
 
@@ -111,7 +142,7 @@ Run the script with the command
 
 Use paraview to load the geometry file and the track files. Parview can also be used to slice and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium.
 
-#### Task 4 - Find the neutron spectra (and leakage)
+#### <a name="task1"></a>Task 4 - Finding the neutron spectra
 
 The ```example_neutron_flux.py``` file contains a single material, simple hollow sphere geometry, a 14MeV point source and a mesh tally showing neutron flux. Try running this file.
 
@@ -133,12 +164,17 @@ The model still has a point source but now it is located at x=150 y=0 z=0 and ce
 
 
 
-#### Task 5 - Find the tritium production
+#### <a name="task5"></a>Task 5 - Finding the tritium production
 
 
 
-#### Task 6 - Find the DPA
+#### <a name="task6"></a>Task 6 - Finding the DPA
 
-#### Task 7 - Find the best material for a neutron shield
+#### <a name="task7"></a>Task 7 - Finding the best material for shielding neutrons
 
-#### Task 8 - Optimise a breeder blanket for tritium production
+#### <a name="task8"></a>Task 8 - Optimize a breeder blanket for tritium production
+
+
+### Acknowledgments
+Fred Thomas for providing examples from the Serpent workshop
+Enrique Miralles Dolz for providing the CSG tokamak model
