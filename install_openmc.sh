@@ -9,10 +9,11 @@ sudo apt-get --yes install gfortran g++ cmake libhdf5-dev git
 cd /opt
 git clone https://github.com/mit-crpg/openmc
 cd openmc
+rm -r bld
 mkdir bld
 cd bld
 cmake .. -DCMAKE_INSTALL_PREFIX=..
-make -j8
+make -j
 make install
 
 sudo apt-get --yes install python3-pip python3-tk

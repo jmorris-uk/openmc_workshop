@@ -12,7 +12,13 @@ import openmc.data
 from tqdm import tqdm
 import os
 
-nuclear_data_path =  os.path.dirname(os.environ['OPENMC_CROSS_SECTIONS'])
+if 'OPENMC_CROSS_SECTIONS' in os.environ:
+      nuclear_data_path = os.environ['OPENMC_CROSS_SECTIONS']
+      nuclear_data_path = os.path.dirname(nuclear_data_path)
+else:
+      nuclear_data_path ='openmc/nndc_hdf5/cross_sections.xml' 
+      os.environ['OPENMC_CROSS_SECTIONS'] = nuclear_data_path
+      nuclear_data_path = os.path.dirname(nuclear_data_path)
 
 
 #this list will take a long time to process
