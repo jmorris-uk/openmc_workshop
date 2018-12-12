@@ -13,8 +13,10 @@ rm -r bld
 mkdir bld
 cd bld
 cmake .. -DCMAKE_INSTALL_PREFIX=..
-make -j
+make 
 make install
+cd ..
+python3 setup.py install
 
 sudo apt-get --yes install python3-pip python3-tk
 
@@ -44,6 +46,6 @@ cd /opt/openmc
 sudo python3 setup.py install ## pip install might work betters
 sudo cp /opt/openmc/bin/openmc /usr/bin
 
-sudo python3 /opt/openmc/scripts/openmc-get-nndc-data -b
+sudo python3 /opt/openmc/scripts/openmc-get-nndc-data # -b
 
 export OPENMC_CROSS_SECTIONS=/opt/openmc/nndc_hdf5/cross_sections.xml

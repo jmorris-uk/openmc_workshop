@@ -53,22 +53,31 @@ RUN pip3 install pytest-cov
 RUN pip3 install pylint
 
 # Python libraries used in the workshop
-RUN pip3 install tqdm
 RUN pip3 install plotly
+RUN pip3 install tqdm
+
 
 # installs OpenMc from source
-RUN git clone https://github.com/mit-crpg/openmc && \
+# RUN git clone https://github.com/mit-crpg/openmc && \
+RUN git clone https://github.com/Shimwell/openmc.git && \
     cd openmc && \
+    git checkout added_MT_gas_reactions_back && \
     mkdir bld && cd bld && \
     cmake .. -DCMAKE_INSTALL_PREFIX=.. && \
-    make -j8 && \
+    make && \
     make install
+
+RUN PATH="$PATH:/openmc/bld/bin/"
+RUN cp /openmc/bld/bin/openmc /usr/local/bin
 
 RUN cd openmc && python3 setup.py install
 
-RUN PATH="$PATH:$openmc/bld/bin/"
+
 
 RUN cd openmc && python3 /openmc/scripts/openmc-get-nndc-data -b
+
+#RUN cd openmc && python3 /openmc/scripts/openmc-get-nndc-data --libver latest
+#RUN cd openmc && python3 /openmc/scripts/openmc-get-nndc-data --libver earliest
 
 #COPY ENDF-B-VII.1-neutron-293.6K.tar.gz .
 #COPY ENDF-B-VII.1-tsl.tar.gz .
@@ -84,9 +93,15 @@ RUN apt-get install -y firefox
 
 RUN OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml
 
-COPY * /
+RUN export OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml
+
+
+RUN apt-get install hdf5-tools
+
+COPY tasks /
 #REPLACE WITH GIT PULL
 
+#RUN "export OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml" >> /root/.bashrc
 
 WORKDIR /
 
