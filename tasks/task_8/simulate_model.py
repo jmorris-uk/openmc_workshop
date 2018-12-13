@@ -377,7 +377,7 @@ for i in tqdm(range(0,num_sims)):
     inner_radius = random.uniform(1, 500)
     thickness = random.uniform(1, 500)
     result = make_materials_geometry_tallies(batches=2,
-                                             nps=1500000,
+                                             nps=5000000,
                                              enrichment_fraction=enrichment_fraction,
                                              inner_radius=inner_radius,
                                              thickness=thickness,

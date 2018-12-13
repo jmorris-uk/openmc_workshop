@@ -17,7 +17,7 @@ import numpy as np
 
 
 
-with open('simulation_results100.json') as f:
+with open('simulation_results500.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #
