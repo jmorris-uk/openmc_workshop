@@ -103,7 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-
+*.json
 *.h5
 *.html
 *.xml
