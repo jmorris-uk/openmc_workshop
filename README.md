@@ -1,7 +1,7 @@
 # Fusion Neutronics workshop with OpenMC
 A selection of resources for learning openmc with particular focus on simulations relevant for fusion energy.
 
-Introduction slides https://slides.com/shimwell/neutronics_workshop
+There are a few slides introducing the workshop https://slides.com/shimwell/neutronics_workshop
 
 
 
@@ -22,9 +22,11 @@ Now that you have the Docker image you can run it by typing the following comman
 
 This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 
+
+
 ### Getting started on the tasks
 
-- [Task 1 Cross section plotting](#task1)
+- [Task 1 - Cross section plotting](#task1)
 - [Task 2 - Building and visualizing the model geometry](#task2)
 - [Task 3 - Visualizing neutron tracks](#task3)
 - [Task 4 - Finding the neutron spectra](#task4)
@@ -39,7 +41,7 @@ Knowing the interaction probabilities of the isotopes and materials within your 
 
 From inside the docker container navigate to the task_1 directory and open the first example python script
 
-```cd task_1```
+```cd tasks/task_1```
 
 ```atom example_isotope_plot.py```
 
@@ -87,7 +89,7 @@ There are two methods of producing 2D slice views of the geometry
 
 The first example 2D slice plot can be opened and produced by running ...
 
-```cd task_2```
+```cd tasks/task_2```
 
 ```atom 1_example_geometry_viewer.py```
 
@@ -126,6 +128,7 @@ The next example script shows a simple geometry that can be viewed in 3D using p
 select "id" and "surface" in the dropdown menus and click apply to view the geometry. Then use the threshold and slice operations to view the geometry.
 
 - Try combining the last two scripts so that you can visulise the tokamak model in 3D.
+
 
 #### <a name="task3"></a>Task 3 - Visualizing neutron tracks
 

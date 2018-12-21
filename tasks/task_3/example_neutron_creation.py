@@ -78,7 +78,6 @@ traces.append(Scatter(x=energy_bins[:-1],
                        line={'shape':'hv'},
                        hoverinfo='text' ,                       
                        name = 'neutron direction',                
-
                       )
               ) 
 

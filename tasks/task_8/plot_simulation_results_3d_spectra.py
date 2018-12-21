@@ -39,11 +39,11 @@ for material_name in ['Li4SiO4','Li','Pb84.2Li15.8','F2Li2BeF2']:
 
     df_filtered_by_mat = results_df[results_df['breeder_material_name']==material_name]
 
-    norm = matplotlib.colors.Normalize(vmin=df_filtered_by_mat[color_by].max(),vmax=df_filtered_by_mat[color_by].min())
-    cmap = matplotlib.cm.get_cmap()
+    #norm = matplotlib.colors.Normalize(vmin=df_filtered_by_mat[color_by].max(),vmax=df_filtered_by_mat[color_by].min())
+    #cmap = matplotlib.cm.get_cmap()
 
     traces={}
-    for tally_name in ['vacuum_vessel_spectra']: #'neutron_spectra_front_surface','neutron_spectra_breeder_cell'
+    for tally_name in ['vacuum_vessel_spectra']: #breeder_blanket_spectra
         
 
         
@@ -95,7 +95,7 @@ for material_name in ['Li4SiO4','Li','Pb84.2Li15.8','F2Li2BeF2']:
                                     z=tally ,
                                     y=[t]*len(tally),
                                     mode = 'lines',
-                                    hoverinfo='text' ,
+                                    hoverinfo='text',
                                     text=text_values,                       
                                     name = 'simulation '+str(lgroup_counter) ,                
                                     #error_y= {'array':tally_std_dev},
@@ -115,8 +115,9 @@ for material_name in ['Li4SiO4','Li','Pb84.2Li15.8','F2Li2BeF2']:
         
     if traces[tally_name] != []:
         layout = {'title':tally_name.replace('_',' ').title()+' with '+material_name,
-                  'font':dict(size=18),
+                  'font':dict(size=16),
                   'hovermode':'closest',
+                  'showlegend':False,
                   'scene':{
                         'xaxis':{'title':'Energy eV',
                                 'type':'linear'},
