@@ -15,13 +15,7 @@ import numpy as np
 
 #MATERIALS#
 
-moderating_material = openmc.Material(1, "water") # water contains hydrogen which is a good neutron moderator
-moderating_material.add_element('H', 2,'ao')
-moderating_material.add_element('O', 1,'ao')
-moderating_material.set_density('g/cm3',1.0)
-
-mats = openmc.Materials([moderating_material])
-
+mats = openmc.Materials([])
 
 
 #GEOMETRY#
@@ -29,7 +23,6 @@ mats = openmc.Materials([moderating_material])
 sph1 = openmc.Sphere(R=100, boundary_type = 'vacuum')
 
 simple_moderator_cell = openmc.Cell(region= -sph1 )
-simple_moderator_cell.fill = moderating_material
 
 universe = openmc.Universe(cells=[simple_moderator_cell]) 
 
@@ -55,7 +48,7 @@ source.space = openmc.stats.Point((0,0,0))
 source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
 source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06)
-source.energy = openmc.stats.Muir()
+#source.energy = openmc.stats.Muir()
 sett.source = source
 
 

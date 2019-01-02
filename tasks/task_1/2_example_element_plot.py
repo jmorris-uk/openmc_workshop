@@ -31,7 +31,7 @@ for element_name in tqdm(all_stable_elements):
             print('element failed ',element_name)
 
 
-layout = {'title':'Element cross sections'+ str(Endf_MT_number[0]),
+layout = {'title':'Element cross sections '+ str(Endf_MT_number[0]),
           'xaxis':{'title':'Energy (eV)',
                    'range':(0,14.1e6)},
           'yaxis':{'title':'Cross section (barns)'},

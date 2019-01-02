@@ -51,7 +51,7 @@ trace2= Scatter(x=Energy_enriched_Li4SiO4_MT16,
                 mode = 'lines', 
                 name='enriched Li4SiO4 (n,t)')
 
-layout = {'title':'Element cross sections',
+layout = {'title':'Material cross sections',
           'xaxis':{'title':'Energy (eV)',
                    #'range':(1e-10,14.1e6), 
                    'type':'log'

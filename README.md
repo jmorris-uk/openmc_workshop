@@ -31,13 +31,13 @@ This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, n
 - [Task 3 - Visualizing neutron tracks](#task3)
 - [Task 4 - Finding the neutron spectra](#task4)
 - [Task 5 - Finding the tritium production](#task5)
-- [Task 6 - Finding the DPA](#task6)
+- [Task 6 - Finding the neutron damage](#task6)
 - [Task 7 - Finding the best material for shielding neutrons](#task7)
 - [Task 8 - Optimize a breeder blanket for tritium production](#task8)
 
 #### <a name="task1"></a>Task 1 - Cross section plotting
 
-Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). However OpenMC is also able to plot cross sections for isotopes and materials.
+Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting nuclear cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). However OpenMC is also able to plot cross sections for isotopes and materials.
 
 From inside the docker container navigate to the task_1 directory and open the first example python script
 
@@ -91,15 +91,15 @@ The first example 2D slice plot can be opened and produced by running ...
 
 ```cd tasks/task_2```
 
-```atom 1_example_geometry_viewer.py```
+```atom 1_example_geometry_viewer_2d.py```
 
-```python3 1_example_geometry_viewer.py```
+```python3 1_example_geometry_viewer_2d.py```
 
-Views of the simple model from different angles should appear. The second method of producing 2D slice plots works better for large models.
+Views of the simple model from different planes (xy, xz, zy) should appear. The second method of producing 2D slice plots works better for large models.
 
-```atom 2_example_geometry_viewer_fortran_version.py```
+```atom 2_example_geometry_viewer_2d_fortran_version.py```
 
-```python3 2_example_geometry_viewer_fortran_version.py```
+```python3 2_example_geometry_viewer_2d_fortran_version.py```
 
 Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples]([https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry]) and the [documentation]([https://openmc.readthedocs.io/en/stable/usersguide/geometry.html]) for CSG operations.
 
@@ -121,14 +121,21 @@ By the time you have added you extra geometry components your solution should lo
 
 ```atom 3_example_geometry_viewer_2d_tokamak.py```
 
-The next example script shows a simple geometry that can be viewed in 3D using paraview.
+```python3 3_example_geometry_viewer_2d_tokamak.py```
 
-```python3 4_example_geometry_viewer_3d_version.py ```
+The next example script shows a simple geometry that can be viewed in 3D using paraview. This converts the geometry into a block
+
+```atom 4_example_geometry_viewer_3d.py ```
+
+```python3 4_example_geometry_viewer_3d.py ```
 
 select "id" and "surface" in the dropdown menus and click apply to view the geometry. Then use the threshold and slice operations to view the geometry.
 
-- Try combining the last two scripts so that you can visulise the tokamak model in 3D.
+- Try combining the last two scripts so that you can visualize the tokamak model in 3D.
 
+```atom 5_example_geometry_viewer_3d_tokamak.py ```
+
+```python3 5_example_geometry_viewer_3d_tokamak.py ```
 
 #### <a name="task3"></a>Task 3 - Visualizing neutron tracks
 
@@ -171,7 +178,7 @@ The model still has a point source but now it is located at x=150 y=0 z=0 and ce
 
 
 
-#### <a name="task6"></a>Task 6 - Finding the DPA
+#### <a name="task6"></a>Task 6 - Finding the neutron damage
 
 #### <a name="task7"></a>Task 7 - Finding the best material for shielding neutrons
 

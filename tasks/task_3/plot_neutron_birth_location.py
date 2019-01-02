@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""example_isotope_plot.py: plots 3D model with neutron tracks."""
+"""example_isotope_plot.py: plots neutron birth locations and directions."""
 
 __author__      = "Jonathan Shimwell"
 
@@ -15,12 +15,8 @@ import numpy as np
 
 #MATERIALS#
 
-moderating_material = openmc.Material(1, "water") # water contains hydrogen which is a good neutron moderator
-moderating_material.add_element('H', 2,'ao')
-moderating_material.add_element('O', 1,'ao')
-moderating_material.set_density('g/cm3',1.0)
 
-mats = openmc.Materials([moderating_material])
+mats = openmc.Materials([])
 
 
 
@@ -29,7 +25,6 @@ mats = openmc.Materials([moderating_material])
 sph1 = openmc.Sphere(R=100, boundary_type = 'vacuum')
 
 simple_moderator_cell = openmc.Cell(region= -sph1 )
-simple_moderator_cell.fill = moderating_material
 
 universe = openmc.Universe(cells=[simple_moderator_cell]) 
 
