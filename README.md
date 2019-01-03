@@ -139,9 +139,15 @@ select "id" and "surface" in the dropdown menus and click apply to view the geom
 
 #### <a name="task3"></a>Task 3 - Visualizing neutron tracks
 
-The ```example_neutron_creation.py```file shows you how to access the statepoint file created by a simulation. In this example the energy and trajectory of all the simulated neutrons is exstracted. Two plots are created, one shows the energy distribution and one shows the initial neutron trajectory.
+When OpenMC runs a statepoint file is produce which contains information on the neutron source, tally results and additional information. This task focuses on information on the neutron source tasks 4, 5 and 6.
 
-Run ```python3 example_neutron_creation.py``` to produce the two graphs.
+The ```plot_neutron_birth_energy.py``` file shows you how to access the statepoint file created by a simulation. In this example the birth energy of all the simulated neutrons is extracted. A plot of the energy distribution and
+
+Run ```python3 plot_neutron_birth_energy.py``` to produce the plot.
+
+In the next example the initial neutron trajectory and birth location is plotted. Again this information is accessed from the statepoint file.
+
+Run ```python3 plot_neutron_birth_location.py``` to produce the plot
 
 The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the center of the geometry. The objective of this task is to create some 3D particle tracks and visulise them with the geometry.
 

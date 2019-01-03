@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-"""example_isotope_plot.py: plots few 2D views of a simple tokamak geometry with neutron flux."""
+"""example_isotope_plot.py: plots neutron spectra."""
 
 __author__      = "Jonathan Shimwell"
 
 import openmc
 import matplotlib.pyplot as plt
 import os
+from plotly.offline import download_plotlyjs, plot
+from plotly.graph_objs import Scatter, Layout
 
 #MATERIALS#
 
@@ -88,23 +90,24 @@ source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
 sett.source = source
 
-# Create mesh which will be used for tally
-mesh = openmc.Mesh()
-mesh_height=200
-mesh_width = mesh_height
-mesh.dimension = [mesh_width, mesh_height]
-mesh.lower_left = [-750, -750]
-mesh.upper_right = [750, 750]
-
-
+#setup the tallies
 tallies = openmc.Tallies()
-# Create mesh filter for tally
-mesh_filter = openmc.MeshFilter(mesh)
-# Create mesh tally to score flux
-mesh_tally = openmc.Tally(1,name='tallies_on_mesh')
-mesh_tally.filters = [mesh_filter]
-mesh_tally.scores = ['absorption'] #swap flux for (n,t), absorption or flux
-tallies.append(mesh_tally)
+
+particle_filter = openmc.ParticleFilter([1]) #1 is neutron, 2 is photon
+cell_filter = openmc.CellFilter(breeder_blanket_cell)
+cell_filter_fw = openmc.CellFilter(first_wall_cell)
+energy_bins = openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']   
+energy_filter = openmc.EnergyFilter(energy_bins)
+
+spectra_tally = openmc.Tally(3,name='breeder_blanket_spectra')
+spectra_tally.filters = [cell_filter,particle_filter,energy_filter]
+spectra_tally.scores = ['flux']
+tallies.append(spectra_tally)  
+
+spectra_tally = openmc.Tally(4,name='first_wall_spectra')
+spectra_tally.filters = [cell_filter_fw,particle_filter,energy_filter]
+spectra_tally.scores = ['flux']
+tallies.append(spectra_tally)  
 
 
 # Run OpenMC!
@@ -114,15 +117,42 @@ model.run()
 # open the results file
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
-# access the flux tally
-flux_tally = sp.get_tally(scores=['absorption'])  #swap flux for (n,t), absorption or flux
-flux_slice = flux_tally.get_slice(scores=['absorption']) #swap flux for (n,t), absorption or flux
-flux_slice.mean.shape = (mesh_width, mesh_height)
+
+spectra_tally = sp.get_tally(name='breeder_blanket_spectra') # add another tally for first_wall_spectra
+spectra_tally_result = [entry[0][0] for entry in spectra_tally.mean] 
+spectra_tally_std_dev = [entry[0][0] for entry in spectra_tally.std_dev] 
+
+traces=[]
+traces.append(Scatter(x=energy_bins, 
+                      y=spectra_tally_result,
+                      line=dict(shape='hv')
+                     )
+              )
+
+
+# spectra_tally = sp.get_tally(name='first_wall_spectra') # add another tally for first_wall_spectra
+# spectra_tally_result = [entry[0][0] for entry in spectra_tally.mean] 
+# spectra_tally_std_dev = [entry[0][0] for entry in spectra_tally.std_dev] 
+
+# traces.append(Scatter(x=energy_bins, 
+#                       y=spectra_tally_result,
+#                       line=dict(shape='hv')
+#                      )
+#               )
 
 
 
-fig = plt.subplot()
-plt.show(fig.imshow(flux_slice.mean))
 
-plt.show(universe.plot(width=(1500,1500),basis='xz'))
-plt.show(universe.plot(width=(1500,1500),basis='xy'))
+layout = {'title':'Neutron spectra 2 locations',
+            'hovermode':'closest',
+            'xaxis':{'title':'Energy eV',
+                        'type':'linear'},
+            'yaxis':{'title':'Neutrons per cm2 per source neutron',
+                        'type':'log'},
+            }     
+
+plot({'data':traces,
+      'layout':layout
+     },
+       filename='tokamak_spectra.html'
+    )

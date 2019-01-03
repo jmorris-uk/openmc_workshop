@@ -17,7 +17,6 @@ def make_materials_geometry_tallies(enrichment_fraction):
     #MATERIALS#
 
     breeder_material =     openmc.Material(1, "breeder_material") #Pb84.2Li15.8 with natural enrichment of Li6
-    #enrichment_fraction = 0.97
     breeder_material.add_element('Pb', 84.2,'ao')
     breeder_material.add_nuclide('Li6', enrichment_fraction*15.8, 'ao')
     breeder_material.add_nuclide('Li7', (1.0-enrichment_fraction)*15.8, 'ao')
@@ -83,7 +82,7 @@ def make_materials_geometry_tallies(enrichment_fraction):
     sett.run_mode = 'fixed source'
 
     source = openmc.Source()
-    source.space = openmc.stats.Point((150,0,0))
+    source.space = openmc.stats.Point((350,0,0))
     source.angle = openmc.stats.Isotropic()
     source.energy = openmc.stats.Discrete([14e6], [1])
     sett.source = source
@@ -125,9 +124,10 @@ trace1= Scatter(x=[entry['enrichment_fraction'] for entry in results],
                 error_y= {'array':[entry['tbr_tally_std_dev'] for entry in results]},
                 )
 
-layout = {'title':'Tritium production',
+layout = {'title':'Tritium production as a function of Li6 enrichment',
           'xaxis':{'title':'Li6 enrichment fraction'},
           'yaxis':{'title':'TBR'},
          }
 plot({'data':[trace1],
-      'layout':layout})
+      'layout':layout},
+      filename='tbr_study.html')

@@ -11,7 +11,7 @@ import os
 #MATERIALS#
 
 breeder_material = openmc.Material(1, "PbLi") #Pb84.2Li15.8 with natural enrichment of Li6
-enrichment_fraction = 0.07
+enrichment_fraction = 0.07 #change the enrichment upto 1.0
 breeder_material.add_element('Pb', 84.2,'ao')
 breeder_material.add_nuclide('Li6', enrichment_fraction*15.8, 'ao')
 breeder_material.add_nuclide('Li7', (1.0-enrichment_fraction)*15.8, 'ao')
@@ -26,15 +26,12 @@ mats = openmc.Materials([breeder_material])
 
 sph1 = openmc.Sphere(R=100)
 sph2 = openmc.Sphere(R=200, boundary_type = 'vacuum')
-
 sph3 = +sph1 & -sph2 
 
 breeder_blanket_cell = openmc.Cell(region=sph3)
 breeder_blanket_cell.fill = breeder_material
 
 inner_vacuum_cell = openmc.Cell(region=-sph1)
-#inner_vacuum_cell.fill = 'vacuum'
-#cell.region =cell.bounding_box
 
 universe = openmc.Universe(cells=[inner_vacuum_cell,breeder_blanket_cell]) 
 
@@ -51,7 +48,6 @@ sett.batches = batches
 sett.inactive = 0
 sett.particles = 5000
 sett.particle = "neutron"
-sett.track = (1,2,4)
 sett.run_mode = 'fixed source'
 
 # creates a 14MeV point source
@@ -77,21 +73,21 @@ mesh_filter = openmc.MeshFilter(mesh)
 # Create mesh tally to score flux
 mesh_tally = openmc.Tally(1,name='tallies_on_mesh')
 mesh_tally.filters = [mesh_filter]
-mesh_tally.scores = ['flux'] #swap flux for absorption
+mesh_tally.scores = ['flux'] # change flux to absorption
 tallies.append(mesh_tally)
 
 
 # Run OpenMC!
 model = openmc.model.Model(geom, mats, sett, tallies)
 model.run()
-#model.run(tracks=True) # use with openmc-track-to-vtk
+
 
 # open the results file
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
 # access the flux tally
-flux_tally = sp.get_tally(scores=['flux'])  #swap flux for absorption
-flux_slice = flux_tally.get_slice(scores=['flux']) #swap flux for absorption
+flux_tally = sp.get_tally(scores=['flux'])  # change flux to absorption
+flux_slice = flux_tally.get_slice(scores=['flux']) # change flux to absorption
 flux_slice.mean.shape = (mesh_width, mesh_height)
 
 fig = plt.subplot()

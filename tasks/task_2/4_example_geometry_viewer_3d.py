@@ -46,6 +46,5 @@ plots.export_to_xml()
 
 openmc.plot_geometry()
 
-#os.system('/openmc/scripts/openmc-voxel-to-vtk plot_3d.h5 -o plot_3d.vti')
-os.system('/home/jshim/openmc/scripts/openmc-voxel-to-vtk plot_3d.h5 -o plot_3d.vti')
+os.system('openmc-voxel-to-vtk plot_3d.h5 -o plot_3d.vti')
 os.system('paraview plot_3d.vti') # or visit might work better

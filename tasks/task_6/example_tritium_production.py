@@ -11,7 +11,7 @@ import os
 #MATERIALS#
 
 breeder_material = openmc.Material(1, "PbLi") #Pb84.2Li15.8 with natural enrichment of Li6
-enrichment_fraction = 0.97
+enrichment_fraction = 0.90
 breeder_material.add_element('Pb', 84.2,'ao')
 breeder_material.add_nuclide('Li6', enrichment_fraction*15.8, 'ao')
 breeder_material.add_nuclide('Li7', (1.0-enrichment_fraction)*15.8, 'ao')
@@ -83,28 +83,20 @@ sett.run_mode = 'fixed source'
 
 # Create a DT point source
 source = openmc.Source()
-source.space = openmc.stats.Point((150,0,0))
+source.space = openmc.stats.Point((300,0,0))
 source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
 sett.source = source
 
-# Create mesh which will be used for tally
-mesh = openmc.Mesh()
-mesh_height=200
-mesh_width = mesh_height
-mesh.dimension = [mesh_width, mesh_height]
-mesh.lower_left = [-750, -750]
-mesh.upper_right = [750, 750]
-
 
 tallies = openmc.Tallies()
-# Create mesh filter for tally
-mesh_filter = openmc.MeshFilter(mesh)
-# Create mesh tally to score flux
-mesh_tally = openmc.Tally(1,name='tallies_on_mesh')
-mesh_tally.filters = [mesh_filter]
-mesh_tally.scores = ['absorption'] #swap flux for (n,t), absorption or flux
-tallies.append(mesh_tally)
+
+#added a cell tally for tritium production
+cell_filter = openmc.CellFilter(breeder_blanket_cell)
+tbr_tally = openmc.Tally(2,name='TBR')
+tbr_tally.filters = [cell_filter]
+tbr_tally.scores = ['(n,t)']
+tallies.append(tbr_tally)
 
 
 # Run OpenMC!
@@ -114,15 +106,8 @@ model.run()
 # open the results file
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
-# access the flux tally
-flux_tally = sp.get_tally(scores=['absorption'])  #swap flux for (n,t), absorption or flux
-flux_slice = flux_tally.get_slice(scores=['absorption']) #swap flux for (n,t), absorption or flux
-flux_slice.mean.shape = (mesh_width, mesh_height)
+# access the tally
+tbr_tally_result = sp.get_tally(name='TBR')
+print('tbr =',tbr_tally_result.sum)
 
 
-
-fig = plt.subplot()
-plt.show(fig.imshow(flux_slice.mean))
-
-plt.show(universe.plot(width=(1500,1500),basis='xz'))
-plt.show(universe.plot(width=(1500,1500),basis='xy'))
