@@ -30,10 +30,11 @@ This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, n
 - [Task 2 - Building and visualizing the model geometry](#task2)
 - [Task 3 - Visualizing neutron tracks](#task3)
 - [Task 4 - Finding the neutron spectra](#task4)
-- [Task 5 - Finding the tritium production](#task5)
-- [Task 6 - Finding the neutron damage](#task6)
-- [Task 7 - Finding the best material for shielding neutrons](#task7)
-- [Task 8 - Optimize a breeder blanket for tritium production](#task8)
+- [Task 5 - Finding the neutron spectra](#task5)
+- [Task 6 - Finding the tritium production](#task6)
+- [Task 7 - Finding the neutron damage](#task7)
+- [Task 8 - Finding the best material for shielding neutrons](#task8)
+- [Task 9 - Optimize a breeder blanket for tritium production](#task9)
 
 #### <a name="task1"></a>Task 1 - Cross section plotting
 
@@ -149,46 +150,84 @@ In the next example the initial neutron trajectory and birth location is plotted
 
 Run ```python3 plot_neutron_birth_location.py``` to produce the plot
 
-The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the center of the geometry. The objective of this task is to create some 3D particle tracks and visulise them with the geometry.
+The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the center of the geometry. The objective of this task is to create some 3D particle tracks and visualize them with the geometry.
 
 Open up ```atom example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
 
 Run the script with the command
 ```python3 example_neutron_tracks.py```
 
-Use paraview to load the geometry file and the track files. Parview can also be used to slice and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium.
+Use paraview to load the geometry file and then import the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium.
 
-#### <a name="task1"></a>Task 4 - Finding the neutron spectra
+#### <a name="task4"></a>Task 4 - Finding the neutron flux
+
+In this task mesh tallies will be produced and visualized.
 
 The ```example_neutron_flux.py``` file contains a single material, simple hollow sphere geometry, a 14MeV point source and a mesh tally showing neutron flux. Try running this file.
 
 ```Python3 example_neutron_flux.py```
 
-You should see the isotropic point source appearing allong with the simple sphere geometry.
+You should see the isotropic point source appearing along with the simple sphere geometry. The color map shows the neutron flux reducing as one moves away from the point source.
 
 - Try changing the "flux" tally for an "absorption" tally and rerun the simulation with the same command.
 
 - Try changing the Li6 enrichment of the material and compare the absorption of neutrons with the natural Li6 enrichment.
 
-There is another example neutron flux file with the simple tokamak geometry. Take a look at ```example_neutron_flux_tokamak.py``` and run the file.
+There is another example neutron flux file with the simple tokamak geometry. Take a look at ```example_neutron_flux_tokamak.py``` and run the file with the command.
+
+```atom example_neutron_flux_tokamak.py```
 
 ```Python3 example_neutron_flux_tokamak.py```
 
 The model still has a point source but now it is located at x=150 y=0 z=0 and central column shielding is noticeable on the flux, absorption and tritium production mesh tallies.
 
+- Try changing the mesh tally from (n,t) to flux and absorption.
+
+#### <a name="task5"></a>Task 5 - Finding the neutron spectra
+
+In this task the neutron spectra at two different locations will be found and visualized.
+
+Open ```example_neutron_spectra_tokamak.py``` to see how the neutron spectra is obtained for the breeder blanket cell. Then run ```example_neutron_spectra_tokamak.py``` to plot the neutron spectra within the breeder blanket.
+
+```atom example_neutron_spectra_tokamak.py```
+
+```Python3 example_neutron_spectra_tokamak.py```
+
+- Try plotting the neutron spectra within the first wall cell on the same axis and compare it to the breeder blanket cell.
 
 
 
+#### <a name="task6"></a>Task 6 - Finding the tritium production
 
-#### <a name="task5"></a>Task 5 - Finding the tritium production
+In this task you will find the tritium breeding ratio (TBR) for a single tokamak model using ```example_tritium_production.py``` and then the TBR values for a range of tokamak models with different Li6 enrichment values with the ```example_tritium_production_study.py``` script.
 
+Open and run the ```example_tritium_production.py``` script with the following commands.
 
+```atom example_tritium_production.py```
 
-#### <a name="task6"></a>Task 6 - Finding the neutron damage
+```Python3 example_tritium_production.py```
 
-#### <a name="task7"></a>Task 7 - Finding the best material for shielding neutrons
+The TBR value obtained from the simulation is printed in the terminal. Notice that the TBR is below 1.0 so this design will not be self sufficient in fuel.
 
-#### <a name="task8"></a>Task 8 - Optimize a breeder blanket for tritium production
+One option for increasing the TBR is to increase the Li6 content within the blanket. Open and run the next script and see how TBR changes as the Li6 enrichment is increased.
+
+```atom example_tritium_production_study.py```
+
+```Python3 example_tritium_production_study.py```
+
+- Try changing '(n,t)' to 205 and you should get the same result as this is the equivelent  [ENDF MT reaction number]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf])
+
+#### <a name="task7"></a>Task 7 - Finding the neutron damage
+
+Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number is 444 so the example tritium production script from task 6 can be modified to find DPA / 444 instead of (n,t) / 205.
+
+An arbitrary tally multiplier is needed
+
+[DPA values]([https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA])
+
+#### <a name="task8"></a>Task 8 - Finding the best material for shielding neutrons
+
+#### <a name="task9"></a>Task 9 - Optimize a breeder blanket for tritium production
 
 
 ### Acknowledgments

@@ -11,7 +11,7 @@ import os
 #MATERIALS#
 
 breeder_material = openmc.Material(1, "PbLi") #Pb84.2Li15.8 with natural enrichment of Li6
-enrichment_fraction = 0.90
+enrichment_fraction = 0.50
 breeder_material.add_element('Pb', 84.2,'ao')
 breeder_material.add_nuclide('Li6', enrichment_fraction*15.8, 'ao')
 breeder_material.add_nuclide('Li7', (1.0-enrichment_fraction)*15.8, 'ao')
@@ -95,7 +95,7 @@ tallies = openmc.Tallies()
 cell_filter = openmc.CellFilter(breeder_blanket_cell)
 tbr_tally = openmc.Tally(2,name='TBR')
 tbr_tally.filters = [cell_filter]
-tbr_tally.scores = ['(n,t)']
+tbr_tally.scores = ['(n,t)'] #or 205
 tallies.append(tbr_tally)
 
 
