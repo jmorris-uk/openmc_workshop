@@ -9,7 +9,7 @@ There are a few slides introducing the workshop https://slides.com/shimwell/neut
 
 The use of OpenMC for neutronics analysis requires several software packages and nuclear data. These have been installed in a Docker container. Therefore the installation process of consists of two steps.
 
-1. Install Docker CE [windows](https://store.docker.com/editions/community/docker-ce-desktop-windows/plans/docker-ce-desktop-windows-tier?tab=instructions) ,[linux]([https://docs.docker.com/install/linux/docker-ce/ubuntu/]), [mac]([https://store.docker.com/editions/community/docker-ce-desktop-mac])
+1. Install Docker CE [windows](https://store.docker.com/editions/community/docker-ce-desktop-windows/plans/docker-ce-desktop-windows-tier?tab=instructions) ,[linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
 2. Pull the Docker images from the store by typing  the following command in a terminal window
 
 ```docker pull shimwell/openmc_docker```
@@ -40,9 +40,9 @@ This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, n
 
 Please allow 20 minutes for this task.
 
-Expected outputs from this task are on [slide 5 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/5])
+Expected outputs from this task are on [slide 5 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/5)
 
-Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting nuclear cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). However OpenMC is also able to plot cross sections for isotopes and materials.
+Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting nuclear cross sections such as [ShimPlotWell](http://www.cross-section-plotter.com). However OpenMC is also able to plot cross sections for isotopes and materials.
 
 From inside the docker container navigate to the task_1 directory and open the first example python script
 
@@ -50,11 +50,11 @@ From inside the docker container navigate to the task_1 directory and open the f
 
 ```atom example_isotope_plot.py```
 
-OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation]([https://openmc.readthedocs.io/en/v0.10.0/examples/nuclear-data.html]). This script will plot a selection of isotopes and certain reactions.
+OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation](https://openmc.readthedocs.io/en/v0.10.0/examples/nuclear-data.html). This script will plot a selection of isotopes and certain reactions.
 
 ```python3 1_example_isotope_plot.py```
 
-You should see an interactive plot of the n,2n cross section for an isotopes of lead and beryllium. To add different reactions to the plot we would need the ENDF reaction number which standard available [here]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf]).
+You should see an interactive plot of the n,2n cross section for an isotopes of lead and beryllium. To add different reactions to the plot we would need the ENDF reaction number which standard available [here](https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf).
 
 - Try adding the other lead isotopes to the plot.
 
@@ -91,7 +91,7 @@ This file shows us how to plot tritium production in Li4SiO4 which is a candidat
 
 Please allow 20 minutes for this task.
 
-Expected outputs from this task are on [slide 6 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/6])
+Expected outputs from this task are on [slide 6 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/6)
 
 OpenMC can provide both 2D and 3D visualizations of the Constructive Solid Geometry ([CSG](https://en.wikipedia.org/wiki/Constructive_solid_geometry)).
 There are two methods of producing 2D slice views of the geometry
@@ -110,7 +110,7 @@ Views of the simple model from different planes (xy, xz, zy) should appear. The 
 
 ```python3 2_example_geometry_viewer_2d_fortran_version.py```
 
-Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples]([https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry]) and the [documentation]([https://openmc.readthedocs.io/en/stable/usersguide/geometry.html]) for CSG operations.
+Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples](https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry) and the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/geometry.html) for CSG operations.
 
 - Change the inner radius of the blanket to 500cm
 
@@ -124,7 +124,7 @@ Now try adding a first wall and shielded central column to the model using the O
 
 - Try creating a homogenized material from 10% water and 90% steel and assign it to the first wall and the shield.
 
-- Color the geometry plots by material see the [documentation]([https://openmc.readthedocs.io/en/stable/usersguide/plots.html]) for an example
+- Color the geometry plots by material see the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/plots.html) for an example
 
 By the time you have added you extra geometry components your solution should look similar to the geometry contained in the next example script.
 
@@ -155,7 +155,7 @@ select "id" and "surface" in the dropdown menus and click apply to view the geom
 
 Please allow 20 minutes for this task.
 
-Expected outputs from this task are on [slide 7 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/7])
+Expected outputs from this task are on [slide 7 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/7)
 
 When OpenMC runs a statepoint file is produce which contains information on the neutron source, tally results and additional information. This task focuses on information on the neutron source tasks 4, 5 and 6.
 
@@ -187,7 +187,7 @@ Use paraview to load the geometry file and then import the track files (.vtp fil
 
 Please allow 15 minutes for this task.
 
-Expected outputs from this task are on [slide 8 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/8])
+Expected outputs from this task are on [slide 8 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/8)
 
 In this task mesh tallies will be produced and visualized.
 
@@ -223,7 +223,7 @@ The model still has a point source but now it is located at x=150 y=0 z=0 and ce
 
 Please allow 15 minutes for this task.
 
-Expected outputs from this task are on [slide 10 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/10])
+Expected outputs from this task are on [slide 10 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/10)
 
 In this task the neutron spectra at two different locations will be found and visualized.
 
@@ -245,7 +245,7 @@ Open ```example_neutron_spectra_tokamak.py``` to see how the neutron spectra is 
 
 Please allow 15 minutes for this task.
 
-Expected outputs from this task are on [slide 11 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/11])
+Expected outputs from this task are on [slide 11 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/11)
 
 In this task you will find the tritium breeding ratio (TBR) for a single tokamak model using ```example_tritium_production.py``` and then the TBR values for a range of tokamak models with different Li6 enrichment values with the ```example_tritium_production_study.py``` script.
 
@@ -263,7 +263,7 @@ One option for increasing the TBR is to increase the Li6 content within the blan
 
 ```Python3 example_tritium_production_study.py```
 
-- Try changing '(n,t)' to 205 and you should get the same result as this is the equivelent  [ENDF MT reaction number]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf])
+- Try changing '(n,t)' to 205 and you should get the same result as this is the equivelent  [ENDF MT reaction number](https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf)
 
 
 
@@ -275,19 +275,19 @@ One option for increasing the TBR is to increase the Li6 content within the blan
 
 Please allow 15 minutes for this task.
 
-Expected outputs from this task are on [slide 12 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/12])
+Expected outputs from this task are on [slide 12 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/12)
 
 Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number is 444 so the example tritium production script from task 6 can be modified to find DPA / 444 instead of (n,t) / 205.
 
 An arbitrary tally multiplier is needed
 
-[DPA values]([https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA])
+[DPA values](https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA)
 
 #### <a name="task8"></a>Task 8 - Optimize a breeder blanket for tritium production
 
 Please allow 25 minutes for this task.
 
-Expected outputs from this task are on [slide 13 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/13])
+Expected outputs from this task are on [slide 13 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/13)
 
 ### Acknowledgments
 Fred Thomas for providing examples from the Serpent workshop,
