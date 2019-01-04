@@ -18,7 +18,7 @@ The use of OpenMC for neutronics analysis requires several software packages and
 
 Now that you have the Docker image you can run it by typing the following command in a terminal window.
 
-```docker run -it openmc```
+```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
 
 This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 

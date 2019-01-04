@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.10
 
 MAINTAINER Jonathan Shimwell
 
@@ -25,7 +25,11 @@ RUN apt-get --yes update && apt-get --yes upgrade
 RUN apt-get --yes install gfortran g++ cmake libhdf5-dev git
 
 RUN apt-get update
-RUN apt-get install -y python3-pip python3-dev python3-tk
+RUN apt-get install -y python3-pip
+RUN apt-get install -y python3-dev
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get install -y python3-tk
+
 
 # Python Prerequisites Required
 RUN pip3 install numpy
@@ -84,10 +88,7 @@ RUN export OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml
 RUN apt-get --yes update
 RUN apt-get --yes install hdf5-tools
 RUN apt-get --yes install imagemagick
-#RUN apt-get --yes install paraview
-RUN apt-get --yes install wget
-
-RUN wget https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v5.6&type=binary&os=Linux&downloadFile=ParaView-5.6.0-osmesa-MPI-Linux-64bit.tar.gz
+RUN apt-get --yes install paraview
 
 RUN git clone https://github.com/Shimwell/openmc_workshop.git
 
