@@ -40,6 +40,8 @@ This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, n
 
 Please allow 20 minutes for this task.
 
+Expected outputs from this task are on [slide 5 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/5])
+
 Knowing the interaction probabilities of the isotopes and materials within your model can help understand the simulation results. There are several online tools for plotting nuclear cross sections such as [ShimPlotWell]([http://www.cross-section-plotter.com]). However OpenMC is also able to plot cross sections for isotopes and materials.
 
 From inside the docker container navigate to the task_1 directory and open the first example python script
@@ -88,6 +90,8 @@ This file shows us how to plot tritium production in Li4SiO4 which is a candidat
 #### <a name="task2"></a>Task 2 - Building and visualizing the model geometry
 
 Please allow 20 minutes for this task.
+
+Expected outputs from this task are on [slide 6 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/6])
 
 OpenMC can provide both 2D and 3D visualizations of the Constructive Solid Geometry ([CSG](https://en.wikipedia.org/wiki/Constructive_solid_geometry)).
 There are two methods of producing 2D slice views of the geometry
@@ -142,7 +146,16 @@ select "id" and "surface" in the dropdown menus and click apply to view the geom
 
 ```python3 5_example_geometry_viewer_3d_tokamak.py ```
 
+
+
+
+
+
 #### <a name="task3"></a>Task 3 - Visualizing neutron tracks
+
+Please allow 20 minutes for this task.
+
+Expected outputs from this task are on [slide 7 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/7])
 
 When OpenMC runs a statepoint file is produce which contains information on the neutron source, tally results and additional information. This task focuses on information on the neutron source tasks 4, 5 and 6.
 
@@ -163,9 +176,18 @@ Run the script with the command
 
 Use paraview to load the geometry file and then import the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium.
 
+
+
+
+
+
+
+
 #### <a name="task4"></a>Task 4 - Finding the neutron flux
 
 Please allow 15 minutes for this task.
+
+Expected outputs from this task are on [slide 8 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/8])
 
 In this task mesh tallies will be produced and visualized.
 
@@ -189,9 +211,19 @@ The model still has a point source but now it is located at x=150 y=0 z=0 and ce
 
 - Try changing the mesh tally from (n,t) to flux and absorption.
 
+
+
+
+
+
+
+
+
 #### <a name="task5"></a>Task 5 - Finding the neutron spectra
 
 Please allow 15 minutes for this task.
+
+Expected outputs from this task are on [slide 10 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/10])
 
 In this task the neutron spectra at two different locations will be found and visualized.
 
@@ -205,9 +237,15 @@ Open ```example_neutron_spectra_tokamak.py``` to see how the neutron spectra is 
 
 
 
+
+
+
+
 #### <a name="task6"></a>Task 6 - Finding the tritium production
 
 Please allow 15 minutes for this task.
+
+Expected outputs from this task are on [slide 11 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/11])
 
 In this task you will find the tritium breeding ratio (TBR) for a single tokamak model using ```example_tritium_production.py``` and then the TBR values for a range of tokamak models with different Li6 enrichment values with the ```example_tritium_production_study.py``` script.
 
@@ -227,9 +265,17 @@ One option for increasing the TBR is to increase the Li6 content within the blan
 
 - Try changing '(n,t)' to 205 and you should get the same result as this is the equivelent  [ENDF MT reaction number]([https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf])
 
+
+
+
+
+
+
 #### <a name="task7"></a>Task 7 - Finding the neutron damage
 
 Please allow 15 minutes for this task.
+
+Expected outputs from this task are on [slide 12 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/12])
 
 Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number is 444 so the example tritium production script from task 6 can be modified to find DPA / 444 instead of (n,t) / 205.
 
@@ -239,7 +285,9 @@ An arbitrary tally multiplier is needed
 
 #### <a name="task8"></a>Task 8 - Optimize a breeder blanket for tritium production
 
-Please allow 30 minutes for this task.
+Please allow 25 minutes for this task.
+
+Expected outputs from this task are on [slide 13 of the presentation]([https://slides.com/shimwell/neutronics_workshop/#/13])
 
 ### Acknowledgments
 Fred Thomas for providing examples from the Serpent workshop,
