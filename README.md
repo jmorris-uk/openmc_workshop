@@ -9,7 +9,7 @@ There are a few slides introducing the workshop https://slides.com/shimwell/neut
 
 The use of OpenMC for neutronics analysis requires several software packages and nuclear data. These have been installed in a Docker container. Therefore the installation process of consists of two steps.
 
-1. Install Docker CE [windows]([https://store.docker.com/editions/community/docker-ce-desktop-windows/plans/docker-ce-desktop-windows-tier?tab=instructions]) ,[linux]([https://docs.docker.com/install/linux/docker-ce/ubuntu/]), [mac]([https://store.docker.com/editions/community/docker-ce-desktop-mac])
+1. Install Docker CE [windows](https://store.docker.com/editions/community/docker-ce-desktop-windows/plans/docker-ce-desktop-windows-tier?tab=instructions) ,[linux]([https://docs.docker.com/install/linux/docker-ce/ubuntu/]), [mac]([https://store.docker.com/editions/community/docker-ce-desktop-mac])
 2. Pull the Docker images from the store by typing  the following command in a terminal window
 
 ```docker pull shimwell/openmc_docker```
