@@ -107,7 +107,7 @@ model.run()
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
 # access the tally
-tbr_tallyZ = sp.get_tally(name='TBR')
+tbr_tally = sp.get_tally(name='TBR')
 tbr_tally_result = tbr_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
 tbr_tally_std_dev = tbr_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list 
     

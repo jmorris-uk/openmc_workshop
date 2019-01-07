@@ -1,5 +1,5 @@
 # Fusion Neutronics workshop with OpenMC
-A selection of resources for learning openmc with particular focus on simulations relevant for fusion energy.
+A selection of resources for learning OpenM with particular focus on simulations relevant for fusion energy.
 
 There are a few slides introducing the workshop https://slides.com/shimwell/neutronics_workshop
 
@@ -7,18 +7,18 @@ There are a few slides introducing the workshop https://slides.com/shimwell/neut
 
 ### Installation
 
-The use of OpenMC for neutronics analysis requires several software packages and nuclear data. These have been installed in a Docker container. Therefore the installation process of consists of two steps.
+The use of OpenMC for neutronics analysis requires several software packages and nuclear data. These have been installed in a Docker container. Therefore the installation process consists of two steps.
 
 1. Install Docker CE [windows](https://store.docker.com/editions/community/docker-ce-desktop-windows/plans/docker-ce-desktop-windows-tier?tab=instructions) ,[linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
 2. Pull the Docker images from the store by typing  the following command in a terminal window
 
-```docker pull shimwell/openmc_docker```
+```docker pull shimwell/openmc```
 
 ### Running OpenMC with docker
 
 Now that you have the Docker image you can run it by typing the following command in a terminal window.
 
-```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml shimwell/openmc```
 
 This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 
@@ -54,7 +54,7 @@ OpenMC is well documented so if the script does not make sense take a look at th
 
 ```python3 1_example_isotope_plot.py```
 
-You should see an interactive plot of the n,2n cross section for an isotopes of lead and beryllium. To add different reactions to the plot we would need the ENDF reaction number which standard available [here](https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf).
+You should see an interactive plot of the n,2n cross section for isotopes of lead and beryllium. To add different reactions to the plot we would need the ENDF reaction number (MT number) which is available [here](https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf).
 
 - Try adding the other lead isotopes to the plot.
 
@@ -64,13 +64,13 @@ The plot should now show fusion relevant interactions. These are important react
 
 - Try editing ```1_example_isotope_plot.py``` so that it plots tritium production or neutron multiplication for all the stable isotopes.
 
-Elemental properties can also be found with OpenMc. Try opening the script and then plotting tritium production and neutron multiplication using the ```2_example_element_plot.py``` script
+Elemental properties can also be found with OpenMC. Try opening the script and then plotting tritium production and neutron multiplication using the ```2_example_element_plot.py``` script
 
 ```atom 2_example_element_plot.py```
 
 ```python3 2_example_element_plot.py```
 
-A nice feature of OpenMc is that is can plot cross sections for more complete materials made from combinations of isotopes. Open the next example python script and edit the script so that it can plot the tritium production and use this to identify the best elements for tritium production and neutron production. Why we might want to avoid some of these elements?
+A nice feature of OpenMC is that it can plot cross sections for more complete materials made from combinations of isotopes. Open the next example python script and edit the script so that it can plot the tritium production and use this to identify the best elements for tritium production and neutron production. Why we might want to avoid some of these elements?
 
 ```atom 3_example_material_plot.py```
 
@@ -87,7 +87,7 @@ This file shows us how to plot tritium production in Li4SiO4 which is a candidat
 
 
 
-#### <a name="task2"></a>Task 2 - Building and visualizing the model geometry
+#### <a name="task2"></a>Task 2 - Building and visualizing the model geometry.
 
 Please allow 20 minutes for this task.
 
@@ -118,13 +118,13 @@ Now try adding a first wall and shielded central column to the model using the O
 
 - Try adding a 10cm thick first wall to the hollow sphere.
 
-- Try adding a center column with a 100cm radius and a 40 cm shield.
+- Try adding a centre column with a 100cm radius and a 40 cm shield.
 
 - Try creating a material from pure copper and assign it to the central column
 
 - Try creating a homogenized material from 10% water and 90% steel and assign it to the first wall and the shield.
 
-- Color the geometry plots by material see the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/plots.html) for an example
+- Colour the geometry plots by material see the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/plots.html) for an example
 
 By the time you have added you extra geometry components your solution should look similar to the geometry contained in the next example script.
 
@@ -157,7 +157,7 @@ Please allow 20 minutes for this task.
 
 Expected outputs from this task are on [slide 7 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/7)
 
-When OpenMC runs a statepoint file is produce which contains information on the neutron source, tally results and additional information. This task focuses on information on the neutron source tasks 4, 5 and 6.
+When OpenMC runs a statepoint (output) file is produced which contains information on the neutron source, tally results and additional information. This task focuses on information on the neutron source tasks 4, 5 and 6 focus on extracting other information from the statepoint file.
 
 The ```plot_neutron_birth_energy.py``` file shows you how to access the statepoint file created by a simulation. In this example the birth energy of all the simulated neutrons is extracted. A plot of the energy distribution and
 
@@ -167,14 +167,14 @@ In the next example the initial neutron trajectory and birth location is plotted
 
 Run ```python3 plot_neutron_birth_location.py``` to produce the plot
 
-The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the center of the geometry. The objective of this task is to create some 3D particle tracks and visualize them with the geometry.
+The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the centre of the geometry. The objective of this task is to create some 3D particle tracks and visualize them with the geometry.
 
 Open up ```atom example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
 
 Run the script with the command
 ```python3 example_neutron_tracks.py```
 
-Use paraview to load the geometry file and then import the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium.
+Use paraview to load the geometry file and then import the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
 
 
 
@@ -195,7 +195,7 @@ The ```example_neutron_flux.py``` file contains a single material, simple hollow
 
 ```Python3 example_neutron_flux.py```
 
-You should see the isotropic point source appearing along with the simple sphere geometry. The color map shows the neutron flux reducing as one moves away from the point source.
+You should see the isotropic point source appearing along with the simple sphere geometry. The colour map shows the neutron flux reducing as one moves away from the point source.
 
 - Try changing the "flux" tally for an "absorption" tally and rerun the simulation with the same command.
 
@@ -255,7 +255,11 @@ Open and run the ```example_tritium_production.py``` script with the following c
 
 ```Python3 example_tritium_production.py```
 
-The TBR value obtained from the simulation is printed in the terminal. Notice that the TBR is below 1.0 so this design will not be self sufficient in fuel.
+The example script prints the TBR and the associated error. As you can see the error is high.
+
+- Try increasing the number of ```batches``` and the ```sett.particles``` and rerun the simulation. You should observe an improved estimate of TBR.
+
+Your should find that the TBR value obtained from the improved simulation is below 1.0 so this design will not be self sufficient in fuel.
 
 One option for increasing the TBR is to increase the Li6 content within the blanket. Open and run the next script and see how TBR changes as the Li6 enrichment is increased.
 
@@ -263,7 +267,7 @@ One option for increasing the TBR is to increase the Li6 content within the blan
 
 ```Python3 example_tritium_production_study.py```
 
-- Try changing '(n,t)' to 205 and you should get the same result as this is the equivelent  [ENDF MT reaction number](https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf)
+- Try changing '(n,t)' to 205 and you should get the same result as this is the equivalent  [ENDF MT reaction number](https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf)
 
 
 
@@ -279,9 +283,12 @@ Expected outputs from this task are on [slide 12 of the presentation](https://sl
 
 Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number is 444 so the example tritium production script from task 6 can be modified to find DPA / 444 instead of (n,t) / 205.
 
-An arbitrary tally multiplier is needed
+In the case of DPA a tally multiplier is needed to account for the material and recombination effects. For example different atoms require different amounts of energy to [displace](https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA).
+ Without going into detail assume this is already incorporated into the tally result. The only multiplier needed is to multiply the result by the source intensity (in neutrons per second) and the irradiation duration (in seconds).
 
-[DPA values](https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA)
+- Using this information find the DPA on the first wall for a 2GW (fusion power) reactor over a 5 year period. Does this exceed the Eurofer DPA limit of 70 DPA?
+
+
 
 #### <a name="task8"></a>Task 8 - Optimize a breeder blanket for tritium production
 
@@ -291,4 +298,4 @@ Expected outputs from this task are on [slide 13 of the presentation](https://sl
 
 ### Acknowledgments
 Fred Thomas for providing examples from the Serpent workshop,
-Enrique Miralles Dolz for providing the CSG tokamak model, Andrew Davis for his work on the fusion neutron source and the OpenMc team for their software.
+Enrique Miralles Dolz for providing the CSG tokamak model, Andrew Davis for his work on the fusion neutron source and the OpenMC team for their software.
