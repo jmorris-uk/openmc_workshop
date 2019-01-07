@@ -78,7 +78,7 @@ sett = openmc.Settings()
 batches = 2
 sett.batches = batches
 sett.inactive = 1
-sett.particles = 5000
+sett.particles = 50
 sett.run_mode = 'fixed source'
 
 # Create a DT point source
@@ -107,7 +107,7 @@ model.run()
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
 # access the tally
-tbr_tally_result = sp.get_tally(name='TBR')
+tbr_tallyZ = sp.get_tally(name='TBR')
 tbr_tally_result = tbr_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
 tbr_tally_std_dev = tbr_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list 
     
