@@ -46,9 +46,11 @@ sett.run_mode = 'fixed source'
 source = openmc.Source()
 source.space = openmc.stats.Point((0,0,0))
 source.angle = openmc.stats.Isotropic()
+
 source.energy = openmc.stats.Discrete([14e6], [1])
-source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06)
-#source.energy = openmc.stats.Muir()
+#source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06) #fission energy distribution
+#source.energy = openmc.stats.Muir(e0=14080000.0, m_rat=5.0, kt=20000.0) #neutron energy = 14.08MeV, AMU for D + T = 5, temperature is 20KeV
+
 sett.source = source
 
 
@@ -60,8 +62,9 @@ sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
 print('energy of neutrons =',sp.source['E']) # these neutrons are all created
 
-energy_bins = np.logspace(3,7) #energy range could b changed
-energy_bins = np.logspace(3,7) #energy range could b changed
+energy_bins = np.linspace(0,20e6,50)
+
+print('energy_bins',energy_bins)
 
 # Calculate pdf for source energies
 probability, bin_edges = np.histogram(sp.source['E'], energy_bins, density=True)

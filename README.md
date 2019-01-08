@@ -163,6 +163,13 @@ The ```plot_neutron_birth_energy.py``` file shows you how to access the statepoi
 
 Run ```python3 plot_neutron_birth_energy.py``` to produce the plot.
 
+As you can see there is a mono-energetic energy source of 14MeV neutrons. There are two other source energy distributions available in the ```plot_neutron_birth_energy.py``` script.
+
+-Try plotting the Watt and Muir neutron spectra and compare them to the mono energetic source.
+
+-Try changing the Muir plasma temperature from 20KeV to 40KeV and plot the two distributions on the same figure.
+ 
+
 In the next example the initial neutron trajectory and birth location is plotted. Again this information is accessed from the statepoint file.
 
 Run ```python3 plot_neutron_birth_location.py``` to produce the plot

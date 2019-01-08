@@ -9,12 +9,6 @@ import os
 import json
 import numpy as np
 from numpy import random
-
-#import chemical_formula #from pyEQL github but does not support floats in equation
-    # element_numbers = chemical_formula.get_element_numbers(breeder_material_name)
-    # elements =chemical_formula.get_elements(breeder_material_name)
-
-
 import re 
 
 

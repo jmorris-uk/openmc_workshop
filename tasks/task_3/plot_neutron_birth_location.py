@@ -48,9 +48,9 @@ sett.run_mode = 'fixed source'
 source = openmc.Source()
 source.space = openmc.stats.Point((0,0,0))
 source.angle = openmc.stats.Isotropic()
-source.energy = openmc.stats.Discrete([14e6], [1])
-source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06)
-#source.energy = openmc.stats.Muir()
+#source.energy = openmc.stats.Discrete([14e6], [1])
+#source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06) #fission energy distribution
+source.energy = openmc.stats.Muir(e0=14080000.0, m_rat=5.0, kt=20000.0) #neutron energy = 14.08MeV, AMU for D + T = 5, temperature is 20KeV
 sett.source = source
 
 
