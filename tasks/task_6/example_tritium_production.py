@@ -112,5 +112,5 @@ tbr_tally_result = tbr_tally.sum[0][0][0]/batches #for some reason the tally sum
 tbr_tally_std_dev = tbr_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list 
     
 
-print('The tritium breeding ratio was found, TBR = ',tbr_tally_result.sum)
+print('The tritium breeding ratio was found, TBR = ',tbr_tally_result)
 print('error on the tbr tally is ',tbr_tally_std_dev)
