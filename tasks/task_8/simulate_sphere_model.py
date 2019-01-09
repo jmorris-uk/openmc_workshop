@@ -11,35 +11,7 @@ import numpy as np
 from numpy import random
 import re 
 
-
-
-def read_chem_eq(chemical_equation):
-        return [a for a in re.split(r'([A-Z][a-z]*)', chemical_equation) if a]
-
-
-def get_elements(chemical_equation):
-        chemical_equation_chopped_up = read_chem_eq(chemical_equation)
-        list_elements = []
-
-        for counter in range(0, len(chemical_equation_chopped_up)):
-            if chemical_equation_chopped_up[counter].isalpha():
-                element_symbol = chemical_equation_chopped_up[counter]
-                list_elements.append(element_symbol)
-        return list_elements
-
-def get_element_numbers(chemical_equation):
-        chemical_equation_chopped_up = read_chem_eq(chemical_equation)
-        list_of_fractions = []
-
-        for counter in range(0, len(chemical_equation_chopped_up)):
-            if chemical_equation_chopped_up[counter].isalpha():
-                if counter == len(chemical_equation_chopped_up)-1:
-                    list_of_fractions.append(1.0)
-                elif not (chemical_equation_chopped_up[counter + 1]).isalpha():
-                    list_of_fractions.append(float(chemical_equation_chopped_up[counter + 1]))
-                else:
-                    list_of_fractions.append(1.0)
-        return list_of_fractions
+from material_maker_functions import *
 
 
 def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C):
@@ -47,7 +19,7 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
     #density data from http://aries.ucsd.edu/LIB/PROPS/PANOS/matintro.html
 
     natural_breeder_material = openmc.Material(2, "natural_breeder_material")
-    breeder_material = openmc.Material(1, "breeder_material")
+    breeder_material = openmc.Material(1, "breeder_material") # this is for enrichmed Li6 
 
     element_numbers = get_element_numbers(breeder_material_name)
     elements = get_elements(breeder_material_name)
@@ -59,24 +31,10 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
         if e == 'Li':
             breeder_material.add_nuclide('Li6', en * enrichment_fraction, 'ao')
             breeder_material.add_nuclide('Li7', en * (1.0-enrichment_fraction), 'ao')  
-
         else:
             breeder_material.add_element(e, en,'ao')    
 
-
-    if breeder_material_name == 'Pb84.2Li15.8':
-        #Pb84.2Li15.8 is the eutectic ratio, this could be a varible
-
-        density_of_natural_material_at_temperature = 99.90*(0.1-16.8e-6*temperature_in_C) #valid for in the range 240-350 C. source http://aries.ucsd.edu/LIB/PROPS/PANOS/lipb.html
-
-    if breeder_material_name == 'F2Li2BeF2':
-        #Li2BeF4 made from 2(FLi):BeF2 is the eutectic ratio, this could be a varible
-
-        density_of_natural_material_at_temperature = 2.214 - 4.2e-4 * temperature_in_C # source http://aries.ucsd.edu/LIB/MEETINGS/0103-TRANSMUT/gohar/Gohar-present.pdf
-
-    if breeder_material_name == 'Li':
-
-        density_of_natural_material_at_temperature = 0.515 - 1.01e-4 * (temperature_in_C - 200) # valid between 200 - 1600 C source http://aries.ucsd.edu/LIB/PROPS/PANOS/li.html
+    density_of_natural_material_at_temperature = find_density_of_natural_material_at_temperature(breeder_material_name,temperature_in_C,natural_breeder_material)
 
     natural_breeder_material.set_density('g/cm3', density_of_natural_material_at_temperature)
     atom_densities_dict = natural_breeder_material.get_nuclide_atom_densities()
@@ -85,8 +43,10 @@ def make_materials(enrichment_fraction, breeder_material_name, temperature_in_C)
     breeder_material.set_density('atom/b-cm',atoms_per_barn_cm) 
 
     mats = openmc.Materials([breeder_material])
-    print(breeder_material)
+    
     return mats
+
+
 
 def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thickness,breeder_material_name,temperature_in_C):
     print('simulating ',batches,enrichment_fraction,inner_radius,thickness,breeder_material_name)
@@ -120,7 +80,7 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     #SIMULATION SETTINGS#
 
     sett = openmc.Settings()
-    # batches = 3
+    # batches = 3 # this is parsed as an argument
     sett.batches = batches
     sett.inactive = 50
     sett.particles = 5000
@@ -136,28 +96,21 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
 
     tallies = openmc.Tallies()
 
+    # define filters
     cell_filter = openmc.CellFilter(breeder_blanket_cell)
     particle_filter = openmc.ParticleFilter([1]) #1 is neutron, 2 is photon
+    surface_filter = openmc.SurfaceFilter(breeder_blanket_outer_surface)
+    
     tbr_tally = openmc.Tally(1,name='TBR')
     tbr_tally.filters = [cell_filter,particle_filter]
     tbr_tally.scores = ['205']
-
     tallies.append(tbr_tally)
 
-    surface_filter = openmc.SurfaceFilter(breeder_blanket_outer_surface)
     leak_tally = openmc.Tally(2,name='leakage')
-    particle_filter = openmc.ParticleFilter([1])
     leak_tally.filters = [surface_filter,particle_filter]
     leak_tally.scores = ['current']
     tallies.append(leak_tally)
-
-    cell_filter = openmc.CellFilter(breeder_blanket_cell)
-    heat_tally = openmc.Tally(3,name='heat')
-    heat_tally.filters = [cell_filter]
-    heat_tally.scores = ['301'] #-4 for neutron heat, -6 for photon heat
-    tallies.append(heat_tally)    
-
-    # energy_filter = openmc.EnergyFilter([0.0, 4.0, 1.0e6]) # such an energy filter can be used to get the neutron spectra
+ 
 
     #RUN OPENMC #
     model = openmc.model.Model(geom, mats, sett, tallies)

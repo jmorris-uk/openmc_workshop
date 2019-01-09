@@ -160,15 +160,16 @@ Expected outputs from this task are on [slide 7 of the presentation](https://sli
 When OpenMC runs a statepoint (output) file is produced which contains information on the neutron source, tally results and additional information. This task focuses on information on the neutron source tasks 4, 5 and 6 focus on extracting other information from the statepoint file.
 
 The ```plot_neutron_birth_energy.py``` file shows you how to access the statepoint file created by a simulation. In this example the birth energy of all the simulated neutrons is extracted. A plot of the energy distribution and
+run the ```plot_neutron_birth_energy.py``` script to produce the plot.
 
-Run ```python3 plot_neutron_birth_energy.py``` to produce the plot.
+```python3 plot_neutron_birth_energy.py```
 
 As you can see there is a mono-energetic energy source of 14MeV neutrons. There are two other source energy distributions available in the ```plot_neutron_birth_energy.py``` script.
 
--Try plotting the Watt and Muir neutron spectra and compare them to the mono energetic source.
+- Try plotting the Watt and Muir neutron spectra and compare them to the mono energetic source.
 
--Try changing the Muir plasma temperature from 20KeV to 40KeV and plot the two distributions on the same figure.
- 
+- Try changing the Muir plasma temperature from 20KeV to 40KeV and plot the two distributions on the same figure.
+
 
 In the next example the initial neutron trajectory and birth location is plotted. Again this information is accessed from the statepoint file.
 
