@@ -11,7 +11,7 @@ import json
 import pandas as pd
 from pandas.io.json import json_normalize 
 
-with open('simulation_results2.json') as f:
+with open('simulation_results_tokamak.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #
