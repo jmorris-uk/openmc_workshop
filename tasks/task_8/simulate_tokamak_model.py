@@ -192,11 +192,6 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     tally.scores = ['444']
     tallies.append(tally)    
 
-    # heat_tally = openmc.Tally(5,name='heat')
-    # heat_tally.filters = [cell_filter]
-    # heat_tally.scores = ['301'] #-4 for neutron heat, -6 for photon heat
-    # tallies.append(heat_tally)    
-    # this returns 0 as 301 is missing from xs file
 
     #RUN OPENMC #
     model = openmc.model.Model(geom, mats, sett, tallies)
@@ -287,22 +282,10 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
 
 
 
-
-
-
-
-natural_enrichment_fraction=0.07589
-#comparison TBR simulations values with https://link.springer.com/article/10.1023/B:JOFE.0000021555.70423.f1
-
-
-
 results = []
-num_sims = 50
-output_filename= 'simulation_results'+str(num_sims)+'.json'
-with open(output_filename, mode='w', encoding='utf-8') as f:
-    json.dump(results, f)
+num_simulations = 5
 
-for i in tqdm(range(0,num_sims)):
+for i in tqdm(range(0,num_simulations)):
     breeder_material_name = random.choice(['Li4SiO4', 'F2Li2BeF2', 'Li', 'Pb84.2Li15.8'])
     enrichment_fraction = random.uniform(0, 1)
     inner_radius = random.uniform(1, 500)
@@ -317,6 +300,7 @@ for i in tqdm(range(0,num_sims)):
                                    )
     results.append(result)
 
+output_filename= 'simulation_results_tokamak.json'
 with open(output_filename, mode='w', encoding='utf-8') as f:
     json.dump(results, f)
 
