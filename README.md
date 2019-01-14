@@ -16,11 +16,15 @@ The use of OpenMC for neutronics analysis requires several software packages and
 
 ### Running OpenMC with docker
 
-Now that you have the Docker image you can run it by typing the following command in a terminal window.
+Now that you have the Docker image you can enable graphics linking between your os and docker then run the image by typing the following command in a terminal window.
 
-```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml shimwell/openmc```
+```xhost local:root```
 
-This should load up an Ubuntu Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
+```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+
+This should load up an Ubuntu 18.04 Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
+
+You can quickly test the graphics options worked by typing ```paraview``` in the docker container enviroment.
 
 
 
@@ -304,6 +308,18 @@ Please allow 25 minutes for this task.
 
 Expected outputs from this task are on [slide 13 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/13)
 
+This task is more open ended and the aim is to find the minimum thickness of breeder material needed to obtain a TBR of 1.2.
+
+There are several candidate breeder materials including a lithium ceramic (Li4SiO4), Flibe, Lithium lead (eutectic) and pure lithium.
+
+Each material can have it's lithium 6 content enriched and this has an impact on the TBR.
+
+Examine the ```simulate_tokamak_model.py``` file and try to understand how the model is created and simulation parameters are saved.
+
+You will need to adjust some of the settings within the simulations to make sure that the error on the final TBR values are acceptable (nps and batches).
+
+
+
 ### Acknowledgments
-Fred Thomas for providing examples from the Serpent workshop,
+Fred Thomas for providing examples from previous years Serpent workshop,
 Enrique Miralles Dolz for providing the CSG tokamak model, Andrew Davis for his work on the fusion neutron source and the OpenMC team for their software.

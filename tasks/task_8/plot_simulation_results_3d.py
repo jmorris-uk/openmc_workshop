@@ -12,7 +12,7 @@ import pandas as pd
 from pandas.io.json import json_normalize 
 import numpy as np
 
-with open('simulation_results20.json') as f:
+with open('simulation_results_tokamak.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #
@@ -28,8 +28,6 @@ all_materials = ['F2Li2BeF2','Li','Pb84.2Li15.8','Li4SiO4']
 for tally_name in ['leakage','tbr']:
     #tally_name_error = tally_name+'_st_dev'
 
-
-
     text_values = {}
 
     for material_name in all_materials:
@@ -41,7 +39,7 @@ for tally_name in ['leakage','tbr']:
                             df_filtered_by_mat['thickness'],
                             df_filtered_by_mat['inner_radius'],
                             df_filtered_by_mat['tbr.value'],
-                            df_filtered_by_mat['leakage.value']):
+                            df_filtered_by_mat['vessel_leakage.value']):
                 text_value.append('TBR =' +str(tbr)+'<br>'+
                                 'Leakage =' +str(leak)+'<br>'+
                                 'enrichment fraction ='+str(e) +'<br>'+

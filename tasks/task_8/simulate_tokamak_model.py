@@ -65,63 +65,49 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
 
     #GEOMETRY#
 
-    # central_sol_surface = openmc.ZCylinder(R=100)
-    # central_shield_outer_surface = openmc.ZCylinder(R=110,boundary_type='vacuum')
-    # vessel_inner = openmc.Sphere(R=500,boundary_type='vacuum')
-    # first_wall_outer_surface = openmc.Sphere(R=510)
-    # breeder_blanket_outer_surface = openmc.Sphere(R=610)
+    central_sol_surface = openmc.ZCylinder(R=100)
+    central_shield_outer_surface = openmc.ZCylinder(R=110)
+    first_wall_inner_surface = openmc.Sphere(R=500)
+    first_wall_outer_surface = openmc.Sphere(R=510)
+    breeder_blanket_outer_surface = openmc.Sphere(R=610)
+    vessel_outer_surface = openmc.Sphere(R=620,boundary_type='vacuum')
 
-    # central_sol_region = -central_sol_surface & -breeder_blanket_outer_surface
-    # central_sol_cell = openmc.Cell(region=central_sol_region) 
-    # central_sol_cell.fill = copper
+    central_sol_region = -central_sol_surface & -breeder_blanket_outer_surface
+    central_sol_cell = openmc.Cell(region=central_sol_region) 
+    central_sol_cell.fill = copper
 
-    # central_shield_region = +central_sol_surface & -central_shield_outer_surface & -breeder_blanket_outer_surface
-    # central_shield_cell = openmc.Cell(region=central_shield_region) 
-    # central_shield_cell.fill = eurofer
+    central_shield_region = +central_sol_surface & -central_shield_outer_surface & -breeder_blanket_outer_surface
+    central_shield_cell = openmc.Cell(region=central_shield_region) 
+    central_shield_cell.fill = eurofer
 
-    # first_wall_region = -first_wall_outer_surface & +vessel_inner & +central_shield_outer_surface
-    # first_wall_cell = openmc.Cell(region=first_wall_region) 
-    # first_wall_cell.fill = eurofer
-
-    # breeder_blanket_region = +first_wall_outer_surface & -breeder_blanket_outer_surface & +central_shield_outer_surface
-    # breeder_blanket_cell = openmc.Cell(region=breeder_blanket_region) 
-    # breeder_blanket_cell.fill = breeder_material
-
-    # universe = openmc.Universe(cells=[central_sol_cell,central_shield_cell,first_wall_cell, breeder_blanket_cell])
-
-
-    breeder_blanket_inner_surface = openmc.Sphere(R=inner_radius)
-    breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+thickness)
-
-    vessel_inner_surface = openmc.Sphere(R=inner_radius+thickness+10)
-    vessel_outer_surface = openmc.Sphere(R=inner_radius+thickness+20,boundary_type='vacuum')
-
-    breeder_blanket_region = -breeder_blanket_outer_surface & +breeder_blanket_inner_surface
-    breeder_blanket_cell = openmc.Cell(region=breeder_blanket_region) 
-    breeder_blanket_cell.fill = breeder_material
-    breeder_blanket_cell.name = 'breeder_blanket'
-
-    inner_void_region = -breeder_blanket_inner_surface 
+    inner_void_region = -first_wall_inner_surface & +central_shield_outer_surface
     inner_void_cell = openmc.Cell(region=inner_void_region) 
     inner_void_cell.name = 'inner_void'
 
-    vessel_region = +vessel_inner_surface & -vessel_outer_surface
+    first_wall_region = -first_wall_outer_surface & +first_wall_inner_surface & +central_shield_outer_surface
+    first_wall_cell = openmc.Cell(region=first_wall_region) 
+    first_wall_cell.fill = eurofer
+
+    breeder_blanket_region = +first_wall_outer_surface & -breeder_blanket_outer_surface & +central_shield_outer_surface
+    breeder_blanket_cell = openmc.Cell(region=breeder_blanket_region) 
+    breeder_blanket_cell.fill = breeder_material
+
+    vessel_region = +breeder_blanket_outer_surface & -vessel_outer_surface
     vessel_cell = openmc.Cell(region=vessel_region) 
     vessel_cell.name = 'vessel'
     vessel_cell.fill = eurofer
 
-    blanket_vessel_gap_region = -vessel_inner_surface & + breeder_blanket_outer_surface
-    blanket_vessel_gap_cell = openmc.Cell(region=blanket_vessel_gap_region) 
-    blanket_vessel_gap_cell.name = 'blanket_vessel_gap'    
-
-    universe = openmc.Universe(cells=[inner_void_cell, 
+    universe = openmc.Universe(cells=[central_sol_cell,
+                                      central_shield_cell,
+                                      inner_void_cell,
+                                      first_wall_cell, 
                                       breeder_blanket_cell,
-                                      blanket_vessel_gap_cell,
                                       vessel_cell])
 
 
+
     geom = openmc.Geometry(universe)
-    geom.export_to_xml('geometry.xml')
+    # geom.export_to_xml('geometry.xml')
 
     #SIMULATION SETTINGS#
 
@@ -146,7 +132,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     particle_filter = openmc.ParticleFilter([1]) #1 is neutron, 2 is photon
     cell_filter = openmc.CellFilter(breeder_blanket_cell)
     cell_filter_vessel = openmc.CellFilter(vessel_cell)
-    surface_filter_front = openmc.SurfaceFilter(breeder_blanket_inner_surface)
+    surface_filter_front = openmc.SurfaceFilter(first_wall_inner_surface)
     surface_filter_rear = openmc.SurfaceFilter(breeder_blanket_outer_surface)
     energy_bins = openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']   
     energy_filter = openmc.EnergyFilter(energy_bins)
@@ -226,6 +212,8 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
                         'std_dev':tally_std_dev}
 
 
+
+
     tally = sp.get_tally(name='blanket_leakage')
     tally_result = tally.sum[0][0][0]/batches 
     tally_std_dev = tally.std_dev[0][0][0]/batches  
@@ -234,12 +222,14 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
                                     'std_dev':tally_std_dev}
 
 
+
     tally = sp.get_tally(name='vessel_leakage')
     tally_result = tally.sum[0][0][0]/batches 
     tally_std_dev = tally.std_dev[0][0][0]/batches  
 
     json_output['vessel_leakage']={'value':tally_result, 
-                                   'std_dev':tally_std_dev}                                    
+                                   'std_dev':tally_std_dev}  
+
 
 
     spectra_tally = sp.get_tally(name='rear_neutron_spectra')
@@ -251,6 +241,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
                                          'energy_groups':list(energy_bins)}
 
 
+
     spectra_tally = sp.get_tally(name='front_neutron_spectra')
     spectra_tally_result = [entry[0][0] for entry in spectra_tally.mean] 
     spectra_tally_std_dev = [entry[0][0] for entry in spectra_tally.std_dev] 
@@ -260,6 +251,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
                                           'energy_groups':list(energy_bins)}                    
 
 
+
     spectra_tally = sp.get_tally(name='breeder_blanket_spectra')
     spectra_tally_result = [entry[0][0] for entry in spectra_tally.mean] 
     spectra_tally_std_dev = [entry[0][0] for entry in spectra_tally.std_dev] 
@@ -267,6 +259,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     json_output['breeder_blanket_spectra']={'value':spectra_tally_result,
                                             'std_dev':spectra_tally_std_dev,
                                             'energy_groups':list(energy_bins)}         
+
 
 
     spectra_tally = sp.get_tally(name='vacuum_vessel_spectra')
@@ -283,7 +276,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
 
 
 results = []
-num_simulations = 5
+num_simulations = 20 # this value will need to be changed
 
 for i in tqdm(range(0,num_simulations)):
     breeder_material_name = random.choice(['Li4SiO4', 'F2Li2BeF2', 'Li', 'Pb84.2Li15.8'])
@@ -291,7 +284,7 @@ for i in tqdm(range(0,num_simulations)):
     inner_radius = random.uniform(1, 500)
     thickness = random.uniform(1, 500)
     result = make_geometry_tallies(batches=2,
-                                   nps=500,
+                                   nps=50000, # this value will need to be increased
                                    enrichment_fraction=enrichment_fraction,
                                    inner_radius=inner_radius,
                                    thickness=thickness,

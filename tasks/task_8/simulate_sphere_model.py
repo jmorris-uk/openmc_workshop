@@ -59,18 +59,34 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     #GEOMETRY#
 
     breeder_blanket_inner_surface = openmc.Sphere(R=inner_radius)
-    breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+thickness,boundary_type='vacuum')
+    breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+thickness)
+
+    vessel_inner_surface = openmc.Sphere(R=inner_radius+thickness+10)
+    vessel_outer_surface = openmc.Sphere(R=inner_radius+thickness+20,boundary_type='vacuum')
 
     breeder_blanket_region = -breeder_blanket_outer_surface & +breeder_blanket_inner_surface
     breeder_blanket_cell = openmc.Cell(region=breeder_blanket_region) 
     breeder_blanket_cell.fill = breeder_material
     breeder_blanket_cell.name = 'breeder_blanket'
 
-    inner_vessel_region = -breeder_blanket_inner_surface 
-    inner_vessel_cell = openmc.Cell(region=inner_vessel_region) 
-    breeder_blanket_cell.name = 'inner_vessel'
+    inner_void_region = -breeder_blanket_inner_surface 
+    inner_void_cell = openmc.Cell(region=inner_void_region) 
+    inner_void_cell.name = 'inner_void'
 
-    universe = openmc.Universe(cells=[inner_vessel_cell, breeder_blanket_cell])
+    vessel_region = +vessel_inner_surface & -vessel_outer_surface
+    vessel_cell = openmc.Cell(region=vessel_region) 
+    vessel_cell.name = 'vessel'
+    vessel_cell.fill = eurofer
+
+    blanket_vessel_gap_region = -vessel_inner_surface & + breeder_blanket_outer_surface
+    blanket_vessel_gap_cell = openmc.Cell(region=blanket_vessel_gap_region) 
+    blanket_vessel_gap_cell.name = 'blanket_vessel_gap'    
+
+    universe = openmc.Universe(cells=[inner_void_cell, 
+                                      breeder_blanket_cell,
+                                      blanket_vessel_gap_cell,
+                                      vessel_cell])
+
     geom = openmc.Geometry(universe)
 
     #SIMULATION SETTINGS#
