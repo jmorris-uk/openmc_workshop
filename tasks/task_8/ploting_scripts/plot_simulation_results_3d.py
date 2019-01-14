@@ -41,7 +41,7 @@ for tally_name in ['tbr']:
                             df_filtered_by_mat['tbr.value'],
                             df_filtered_by_mat['vessel_leakage.value']):
                 text_value.append('TBR =' +str(tbr)+'<br>'+
-                                'Vessel leakage =' +str(leak)+'<br>'+
+                                'Leakage =' +str(leak)+'<br>'+
                                 'enrichment fraction ='+str(e) +'<br>'+
                                 'thickness ='+str(t) +'<br>'+
                                 'inner radius ='+str(i)                                            
@@ -50,7 +50,7 @@ for tally_name in ['tbr']:
 
     x_axis_name = 'enrichment_fraction'
     y_axis_name = 'thickness'
-    z_axis_name = 'tbr.value'
+    z_axis_name = 'inner_radius'
 
     traces=[]
     for material_name in all_materials:
@@ -68,9 +68,9 @@ for tally_name in ['tbr']:
                                 marker={'color':list(df_filtered_by_mat[tally_name+'.value']),
                                         'colorscale':'Viridis',
                                         'size':2,
-                                        #'colorbar':{'title':tally_name,
-                                        #            'tickvals':np.linspace(start=min(list(df_filtered_by_mat[tally_name+'.value'])),stop=max(list(df_filtered_by_mat[tally_name+'.value'])),num=10)
-                                        #                }
+                                        'colorbar':{'title':tally_name,
+                                                    'tickvals':np.linspace(start=min(list(df_filtered_by_mat[tally_name+'.value'])),stop=max(list(df_filtered_by_mat[tally_name+'.value'])),num=10)
+                                                        }
                                         }
         ))
                     

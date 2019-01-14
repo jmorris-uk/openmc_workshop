@@ -26,6 +26,9 @@ This should load up an Ubuntu 18.04 Docker container with OpenMC, Python3, Parav
 
 You can quickly test the graphics options worked by typing ```paraview``` in the docker container enviroment.
 
+Also check if the workshop repository has been updated by typing the following command from within the Docker container.
+
+```git pull```
 
 
 ### Getting started on the tasks
@@ -306,20 +309,31 @@ In the case of DPA a tally multiplier is needed to account for the material and 
 
 Please allow 25 minutes for this task.
 
-Expected outputs from this task are on [slide 13 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/13)
-
 This task is more open ended and the aim is to find the minimum thickness of breeder material needed to obtain a TBR of 1.2.
 
 There are several candidate breeder materials including a lithium ceramic (Li4SiO4), Flibe, Lithium lead (eutectic) and pure lithium.
 
 Each material can have it's lithium 6 content enriched and this has an impact on the TBR.
 
-Examine the ```simulate_tokamak_model.py``` file and try to understand how the model is created and simulation parameters are saved.
+Examine the ```simulate_tokamak_model.py``` file and try to understand how the model is created and particularly how the simulation parameters are saved in a .json file.
 
-You will need to adjust some of the settings within the simulations to make sure that the error on the final TBR values are acceptable (nps and batches).
+You will need to adjust some of the settings within the simulations (nps and batches) to make sure that the error on the final TBR values are acceptable.
 
+Currently the input parameters for lithium 6 enrichment and blanket thickness are randomly sampled so you might want to change this as well.
+
+First you will also need to change the surface definitions so that the geometry changes as thickness is varied when a new thickness is passed to the geometry making function.
+
+There are two scripts to help you analysis the simulation results.
+
+- ```plot_simulation_results_2d.py``` will allow you to see the impact of changing either the lithium 6 enrichment or the blanket thickness.
+
+- ```plot_simulation_results_3d.py``` will allow you to see the combined impact of changing  the lithium 6 enrichment and the blanket thickness.
+
+Ultimately you should come up with the minimal thickness needed for each candidate blanket material and the lithium 6 enrichment required at that thickness. Feel free to share simulation data with other groups and interpolate between the data points.
+
+One option for interpolating the data is a [Gaussian process tool](https://github.com/C-bowman/inference_tools/blob/master/inference/gp_tools.py)
 
 
 ### Acknowledgments
 Fred Thomas for providing examples from previous years Serpent workshop,
-Enrique Miralles Dolz for providing the CSG tokamak model, Andrew Davis for his work on the fusion neutron source and the OpenMC team for their software.
+Enrique Miralles Dolz for providing the CSG tokamak model, Andrew Davis for his work on the fusion neutron source, Chris Bowman for his Gaussian process software and the OpenMC team for their software.

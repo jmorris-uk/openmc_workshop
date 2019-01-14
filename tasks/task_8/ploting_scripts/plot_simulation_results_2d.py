@@ -11,7 +11,7 @@ import json
 import pandas as pd
 from pandas.io.json import json_normalize 
 
-with open('simulation_results_tokamak.json') as f:
+with open('../simulation_results_tokamak.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #
@@ -40,7 +40,7 @@ for tally_name in ['tbr']:
                                     'thickness ='+str(t) +'<br>'+
                                     'inner radius ='+str(i)                                            
                                     )
-                
+                  print(text_value)
             text_values[material_name] = text_value
 
 
