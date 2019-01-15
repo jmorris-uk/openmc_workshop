@@ -30,6 +30,12 @@ Also check if the workshop repository has been updated by typing the following c
 
 ```git pull```
 
+If you have trouble with the git pull command this could be due to your OS not sharing the internet connection with the docker container. Sharing the internet connection can be encouraged with this modified run command.
+
+
+```docker run--net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+
+
 
 ### Getting started on the tasks
 
