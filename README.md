@@ -151,9 +151,9 @@ The next example script shows a simple geometry that can be viewed in 3D using p
 
 ```python3 4_example_geometry_viewer_3d.py ```
 
-Paraview should load up when this script completes. To make the geometry visible click the "Apply" button and also the small eye ball icon on the left hand side. Then select "id" and "surface" in the dropdown menus and click apply to view the geometry. Then use the threshold and slice operations to view the geometry.
+Paraview should load up when this script completes. To make the geometry visible click the "Apply" button and also the small eye ball icon on the left hand side. Then select "id" and "surface" in the dropdown menus to view the geometry. Then use the threshold and slice operations to view the geometry.
 
-- Try using the paraview threshold operation to remove the vacuum cell. Set the threshold to 0 then click Apply
+- Try using the paraview threshold operation to remove the vacuum cell. Set the threshold to 0 then click the "Apply" button.
 
 - Try combining the last two scripts so that you can visualize the tokamak model in 3D.
 
