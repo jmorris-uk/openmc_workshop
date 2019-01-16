@@ -33,8 +33,11 @@ for element_name in tqdm(all_stable_elements):
 
 layout = {'title':'Element cross sections '+ str(Endf_MT_number[0]),
           'xaxis':{'title':'Energy (eV)',
+                   #'type':'log',
                    'range':(0,14.1e6)},
-          'yaxis':{'title':'Cross section (barns)'},
+          'yaxis':{'title':'Cross section (barns)',
+                   #'type':'log'
+                  },
           'hovermode':'closest'
          }
 
