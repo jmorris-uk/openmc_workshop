@@ -197,7 +197,7 @@ Open up ```atom example_neutron_tracks.py``` and take a look at the ```model.run
 Run the script with the command
 ```python3 example_neutron_tracks.py```
 
-Use paraview to load the geometry file and then import the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
+Use paraview to load the geometry file and then open the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
 
 
 
