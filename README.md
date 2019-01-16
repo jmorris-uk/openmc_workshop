@@ -20,7 +20,7 @@ Now that you have the Docker image you can enable graphics linking between your 
 
 ```xhost local:root```
 
-```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix  -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
 
 This should load up an Ubuntu 18.04 Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 
@@ -33,9 +33,9 @@ Also check if the workshop repository has been updated by typing the following c
 If you have trouble with the git pull command this could be due to your OS not sharing the internet connection with the docker container. Sharing the internet connection can be encouraged with this modified run command.
 
 
-```docker run--net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+```docker run--net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
 
-
+The local directory that you run docker from will be mapped to the /openmc_workshop/swap_space folder within the docker container. This can be useful for transfering files from your docker to your local machine. 
 
 ### Getting started on the tasks
 
