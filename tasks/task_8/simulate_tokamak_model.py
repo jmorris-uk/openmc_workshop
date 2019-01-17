@@ -67,10 +67,10 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
 
     central_sol_surface = openmc.ZCylinder(R=100)
     central_shield_outer_surface = openmc.ZCylinder(R=110)
-    first_wall_inner_surface = openmc.Sphere(R=500)                                                                             # first_wall_inner_surface = openmc.Sphere(R=inner_radius)
-    first_wall_outer_surface = openmc.Sphere(R=510)                                                                             # first_wall_outer_surface = openmc.Sphere(R=inner_radius+10)
-    breeder_blanket_outer_surface = openmc.Sphere(R=610)                                                                        # breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness)
-    vessel_outer_surface = openmc.Sphere(R=620,boundary_type='vacuum')                                                          # vessel_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness+10.0,boundary_type='vacuum')
+    first_wall_inner_surface = openmc.Sphere(R=inner_radius)
+    first_wall_outer_surface = openmc.Sphere(R=inner_radius+10)
+    breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness)
+    vessel_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness+10.0,boundary_type='vacuum')
     
     central_sol_region = -central_sol_surface & -breeder_blanket_outer_surface
     central_sol_cell = openmc.Cell(region=central_sol_region) 
@@ -135,7 +135,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     cell_filter_vessel = openmc.CellFilter(vessel_cell)
     surface_filter_front = openmc.SurfaceFilter(first_wall_inner_surface)
     surface_filter_rear = openmc.SurfaceFilter(breeder_blanket_outer_surface)
-    energy_bins = openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']   
+    energy_bins = [1,2,3]#openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']   
     energy_filter = openmc.EnergyFilter(energy_bins)
 
 
@@ -284,7 +284,7 @@ for i in tqdm(range(0,num_simulations)):
     enrichment_fraction = random.uniform(0, 1)
     thickness = random.uniform(1, 500)
     result = make_geometry_tallies(batches=2,
-                                   nps=5000, # this value will need to be increased
+                                   nps=500, # this value will need to be increased
                                    enrichment_fraction=enrichment_fraction,
                                    inner_radius=500,
                                    thickness=thickness,

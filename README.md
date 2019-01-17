@@ -20,22 +20,14 @@ Now that you have the Docker image you can enable graphics linking between your 
 
 ```xhost local:root```
 
-```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix  -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+```docker run --net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix  -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
 
 This should load up an Ubuntu 18.04 Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 
 You can quickly test the graphics options worked by typing ```paraview``` in the docker container enviroment.
 
-Also check if the workshop repository has been updated by typing the following command from within the Docker container.
 
-```git pull```
-
-If you have trouble with the git pull command this could be due to your OS not sharing the internet connection with the docker container. Sharing the internet connection can be encouraged with this modified run command.
-
-
-```docker run --net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
-
-The local directory that you run docker from will be mapped to the /openmc_workshop/swap_space folder within the docker container. This can be useful for transfering files from your docker to your local machine. 
+The local directory that you run docker from will be mapped to the ```/openmc_workshop/swap_space folder``` within the docker container. This can be useful for transfering files from your docker to your local machine.
 
 ### Getting started on the tasks
 
@@ -61,7 +53,7 @@ From inside the docker container navigate to the task_1 directory and open the f
 
 ```cd tasks/task_1```
 
-```atom example_isotope_plot.py```
+```atom 1_example_isotope_plot.py```
 
 OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation](https://openmc.readthedocs.io/en/v0.10.0/examples/nuclear-data.html). This script will plot a selection of isotopes and certain reactions.
 
@@ -71,7 +63,7 @@ You should see an interactive plot of the n,2n cross section for isotopes of lea
 
 - Try adding the other lead isotopes to the plot.
 
-- Try adding tritium production in Li6 and Li7 to the same plot.
+- Try adding tritium production in Li6 and Li7 to the same plot. You may need to change the axis scale to log
 
 The plot should now show fusion relevant interactions. These are important reactions for breeder blankets as they offer high probability of neutron multiplication and tritium production.
 
@@ -113,15 +105,15 @@ The first example 2D slice plot can be opened and produced by running ...
 
 ```cd tasks/task_2```
 
-```atom 1_example_geometry_viewer_2d.py```
+```atom 1_example_geometry_viewer_2d_fortran_version```
 
-```python3 1_example_geometry_viewer_2d.py```
+```python3 1_example_geometry_viewer_2d_fortran_version.py```
 
 Views of the simple model from different planes (xy, xz, zy) should appear. The second method of producing 2D slice plots works better for large models.
 
-```atom 2_example_geometry_viewer_2d_fortran_version.py```
+```atom 2_example_geometry_viewer_2d.py```
 
-```python3 2_example_geometry_viewer_2d_fortran_version.py```
+```python3 2_example_geometry_viewer_2d.py```
 
 Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples](https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry) and the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/geometry.html) for CSG operations.
 
@@ -129,13 +121,13 @@ Now try adding a first wall and shielded central column to the model using the O
 
 - Change the thickness of the blanket to 100cm
 
-- Try adding a 10cm thick first wall to the hollow sphere.
+- Try adding a 20cm thick first wall to the hollow sphere.
 
 - Try adding a centre column with a 100cm radius and a 40 cm shield.
 
 - Try creating a material from pure copper and assign it to the central column
 
-- Try creating a homogenized material from 10% water and 90% steel and assign it to the first wall and the shield.
+- Try creating a homogenized material from 10% water and 90% tungsten and assign it to the first wall and the shield.
 
 - Colour the geometry plots by material see the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/plots.html) for an example
 
