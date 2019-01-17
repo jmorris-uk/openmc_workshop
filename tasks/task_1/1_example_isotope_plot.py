@@ -31,6 +31,8 @@ candiate_fusion_neutron_multipiers_list = ['Be9','Pb204','Pb206']#,'Pb207','Pb20
 candiate_fusion_tritium_producers_list = ['Li6','Li7']
 
 MT_number = 16 # MT number 16 is (n,2n) reaction others can be found https://www.oecd-nea.org/dbdata/data/manual-endf/endf102_MT.pdf
+# MT 205 is tritium production (n,Xt)
+# MT 444 is DPA damage
 traces=[]
 
 for isotope_name in tqdm(candiate_fusion_neutron_multipiers_list):
