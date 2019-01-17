@@ -9,17 +9,18 @@ import matplotlib.pyplot as plt
 import os
 
 #MATERIALS#
+mats = openmc.Materials()
 
 moderating_material = openmc.Material(1, "water") # water contains hydrogen which is a good neutron moderator
 moderating_material.add_element('H', 2,'ao')
 moderating_material.add_element('O', 1,'ao')
 moderating_material.set_density('g/cm3',1.0)
+mats.append(moderating_material)
 
 transparent_material = openmc.Material(2, "zirconium") # one of the more transparent materials
 transparent_material.add_element('Zr', 1,'ao')
 transparent_material.set_density('g/cm3',6.49)
-
-mats = openmc.Materials([moderating_material,transparent_material])
+mats.append(transparent_material)
 
 
 
@@ -51,7 +52,7 @@ sett = openmc.Settings()
 batches = 1
 sett.batches = batches
 sett.inactive = 0
-sett.particles = 10
+sett.particles = 12
 sett.particle = "neutron"
 sett.track = (1,2,4)
 sett.run_mode = 'fixed source'

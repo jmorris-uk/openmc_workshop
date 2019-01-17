@@ -33,6 +33,7 @@ eurofer.add_element('N', 0.003, percent_type='wo')
 eurofer.add_element('V', 0.2, percent_type='wo')
 
 mats = openmc.Materials([breeder_material, eurofer, copper])
+mats.export_to_xml()
 
 
 #GEOMETRY#
@@ -68,8 +69,13 @@ breeder_blanket_cell.fill = breeder_material
 universe = openmc.Universe(cells=[central_sol_cell,central_shield_cell,inner_vessel_cell,first_wall_cell, breeder_blanket_cell])
 geom = openmc.Geometry(universe)
 
+geom.export_to_xml()
 
+sphere = openmc.Sphere(R=10.0)
+cell = openmc.Cell(region=-sphere)
+vol_calc = openmc.VolumeCalculation(domains=[cell], samples=1000000)
 
+# cell_vol_calc = openmc.VolumeCalculation([breeder_blanket_cell], 10000)
 
 #SIMULATION SETTINGS#
 
@@ -87,35 +93,10 @@ source.space = openmc.stats.Point((300,0,0))
 source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
 sett.source = source
+sett.volume_calculations 
+sett.export_to_xml()
 
 
-tallies = openmc.Tallies()
+openmc.calculate_volumes()
 
-#added a cell tally for tritium production
-cell_filter = openmc.CellFilter(breeder_blanket_cell)
-tbr_tally = openmc.Tally(2,name='TBR')
-tbr_tally.filters = [cell_filter]
-tbr_tally.scores = ['(n,t)'] #or 205
-tallies.append(tbr_tally)
-
-
-# Run OpenMC!
-model = openmc.model.Model(geom, mats, sett, tallies)
-model.run()
-
-# open the results file
-sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
-
-# access the tally
-tbr_tally = sp.get_tally(name='TBR')
-tbr_tally_result = tbr_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
-tbr_tally_std_dev = tbr_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list 
-    
-print('*************************************************************')    
-print('*************************************************************')
-print()
-print('The tritium breeding ratio was found, TBR = ',tbr_tally_result)
-print('error on the tbr tally is ',tbr_tally_std_dev)
-print()
-print('*************************************************************')
-print('*************************************************************')
+#openmc.run()

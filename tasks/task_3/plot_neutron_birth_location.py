@@ -39,7 +39,7 @@ sett = openmc.Settings()
 batches = 2
 sett.batches = batches
 sett.inactive = 0
-sett.particles = 300
+sett.particles = 200
 sett.particle = "neutron"
 sett.run_mode = 'fixed source'
 

@@ -7,21 +7,25 @@ __author__      = "Jonathan Shimwell"
 import openmc
 import matplotlib.pyplot as plt
 
+mats = openmc.Materials()
+
 natural_lead = openmc.Material(1, "natural_lead")
 natural_lead.add_element('Pb', 1,'ao')
 natural_leads.set_density('g/cm3', 11.34)
+mats.append(natural_lead)
 
 # natural_copper = openmc.Material(2, "natural_copper") #hint this is an example material you will need another one called natural_tungsten ,density is 19.3
 # natural_copper.add_element('Cu', 1,'ao')
 # natural_copper.set_density('g/cm3', 8.96)
+# mats.append(natural_copper)
+
 
 # sheild_material = openmc.Material(3, "mixed_tungsten_water")
 # sheild_material.add_material(natural_tungsten, 0.9, 'ao')
 # sheild_material.add_material(natural_copper, 0.1, 'ao')
+# mats.append(sheild_material)
 
 
-
-mats = openmc.Materials([natural_lead]) # hint, you will need to add all the materials used in the model to this list
 mats.export_to_xml()
 
 

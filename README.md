@@ -175,7 +175,7 @@ As you can see there is a mono-energetic energy source of 14MeV neutrons. There 
 
 - Try plotting the Watt and Muir neutron spectra and compare them to the mono energetic source.
 
-- Try changing the Muir plasma temperature from 20KeV to 40KeV and plot the two distributions on the same figure.
+- Try changing the Muir plasma temperature from 20KeV to 40KeV.
 
 
 In the next example the initial neutron trajectory and birth location is plotted. Again this information is accessed from the statepoint file.
@@ -296,7 +296,7 @@ Please allow 15 minutes for this task.
 
 Expected outputs from this task are on [slide 12 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/12)
 
-Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number is 444 so the example tritium production script from task 6 can be modified to find DPA / 444 instead of (n,t) / 205.
+Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number for DPA is 444.
 
 In the case of DPA a tally multiplier is needed to account for the material and recombination effects. For example different atoms require different amounts of energy to [displace](https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA).
  Without going into detail assume this is already incorporated into the tally result. The only multiplier needed is to multiply the result by the source intensity (in neutrons per second) and the irradiation duration (in seconds).
