@@ -7,7 +7,7 @@ __author__      = "Jonathan Shimwell"
 import openmc
 # import matplotlib.pyplot as plt
 from plotly.offline import download_plotlyjs, plot
-from plotly.graph_objs import Scatter, Layout, Histogram , Bar
+from plotly.graph_objs import Scatter, Layout, Histogram , Bar, Scatter3d
 from plotly.figure_factory import create_quiver
 
 import os
@@ -20,7 +20,7 @@ mats = openmc.Materials([])
 
 #GEOMETRY#
 
-sph1 = openmc.Sphere(R=100, boundary_type = 'vacuum')
+sph1 = openmc.Sphere(R=1000, boundary_type = 'vacuum')
 
 simple_moderator_cell = openmc.Cell(region= -sph1 )
 
@@ -37,19 +37,28 @@ sett = openmc.Settings()
 batches = 2
 sett.batches = batches
 sett.inactive = 0
-sett.particles = 300
+sett.particles = 600
 sett.particle = "neutron"
 sett.run_mode = 'fixed source'
 
 
-# creates a 14MeV point source
+
+# creates an isotropic point source
 source = openmc.Source()
 source.space = openmc.stats.Point((0,0,0))
 source.angle = openmc.stats.Isotropic()
 
+# sets the energy of neutrons to 14MeV (monoenergetic)
 source.energy = openmc.stats.Discrete([14e6], [1])
-#source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06) #fission energy distribution
-#source.energy = openmc.stats.Muir(e0=14080000.0, m_rat=5.0, kt=20000.0) #neutron energy = 14.08MeV, AMU for D + T = 5, temperature is 20KeV
+
+# sets the energy of neutrons to a fission energy distribution
+#source.energy = openmc.stats.Watt(a=988000.0, b=2.249e-06)
+
+# sets the energy of neutrons to a fusion energy distribution, energy is 14.08MeV, atomic mass for D + T = 5, temperature is 20KeV
+#source.energy = openmc.stats.Muir(e0=14080000.0, m_rat=5.0, kt=20000.0) 
+
+# sets the source position, direction and energy to be read from a file
+#source.file = 'source.h5'
 
 sett.source = source
 
@@ -70,27 +79,45 @@ print('energy_bins',energy_bins)
 probability, bin_edges = np.histogram(sp.source['E'], energy_bins, density=True)
 
 
-# Plot source energy PDF
-traces=[]
-traces.append(Scatter(x=energy_bins[:-1], 
+# Plot source energy histogram
+traces=[Scatter(x=energy_bins[:-1], 
                        y=probability*np.diff(energy_bins),
                        line={'shape':'hv'},
                        hoverinfo='text' ,                       
                        name = 'neutron direction',                
                       )
-              ) 
+              ] 
 
-layout_ef = {'title':'neutron energy',
+layout = {'title':'neutron energy',
              'hovermode':'closest',
              'xaxis':{'title':'Energy (eV)'},
              'yaxis':{'title':'Probability'},
             }
 
 plot({'data':traces,
-      'layout':layout_ef},
+      'layout':layout},
       filename='particle_energy_histogram.html'
       )
 
 
+
+text = ['Energy = '+str(i)+' eV' for i in sp.source['E']]
+
+# plots 3d poisitons of particles coloured by energy
+traces=[Scatter3d(x=sp.source['xyz'][:,0], 
+                  y=sp.source['xyz'][:,1],
+                  z=sp.source['xyz'][:,2],
+                  hovertext= text,
+                  text=text,
+                  mode = 'markers',
+                  marker={'size':2,'color':sp.source['E'],},
+                  )]
+
+layout = {'title':'Neutron production coordinates, coloured by energy',
+            'hovermode':'closest'}
+
+plot({'data':traces,
+      'layout':layout},
+      filename='3d_scatter_plot.html')
 
 

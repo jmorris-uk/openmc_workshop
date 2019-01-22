@@ -67,10 +67,10 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
 
     central_sol_surface = openmc.ZCylinder(R=100)
     central_shield_outer_surface = openmc.ZCylinder(R=110)
-    first_wall_inner_surface = openmc.Sphere(R=500)                                                                             # first_wall_inner_surface = openmc.Sphere(R=inner_radius)
-    first_wall_outer_surface = openmc.Sphere(R=510)                                                                             # first_wall_outer_surface = openmc.Sphere(R=inner_radius+10)
-    breeder_blanket_outer_surface = openmc.Sphere(R=610)                                                                        # breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness)
-    vessel_outer_surface = openmc.Sphere(R=620,boundary_type='vacuum')                                                          # vessel_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness+10.0,boundary_type='vacuum')
+    first_wall_inner_surface = openmc.Sphere(R=inner_radius)
+    first_wall_outer_surface = openmc.Sphere(R=inner_radius+10)
+    breeder_blanket_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness)
+    vessel_outer_surface = openmc.Sphere(R=inner_radius+10.0+thickness+10.0,boundary_type='vacuum')
     
     central_sol_region = -central_sol_surface & -breeder_blanket_outer_surface
     central_sol_cell = openmc.Cell(region=central_sol_region) 
@@ -121,7 +121,8 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     source = openmc.Source()
     source.space = openmc.stats.Point((150,0,0))
     source.angle = openmc.stats.Isotropic()
-    source.energy = openmc.stats.Discrete([14.08e6], [1])
+    #source.energy = openmc.stats.Discrete([14.08e6], [1])
+    source.energy = openmc.stats.Muir(e0=14080000.0, m_rat=5.0, kt=20000.0) #neutron energy = 14.08MeV, AMU for D + T = 5, temperature is 20KeV
     sett.source = source
 
     sett.export_to_xml('settings.xml')
@@ -277,14 +278,14 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
 
 
 results = []
-num_simulations = 100 # this value will need to be changed
+num_simulations = 500 # this value will need to be changed
 
 for i in tqdm(range(0,num_simulations)):
     breeder_material_name = random.choice(['Li4SiO4', 'F2Li2BeF2', 'Li', 'Pb84.2Li15.8'])
     enrichment_fraction = random.uniform(0, 1)
     thickness = random.uniform(1, 500)
     result = make_geometry_tallies(batches=2,
-                                   nps=5000, # this value will need to be increased
+                                   nps=1000, # this value will need to be increased
                                    enrichment_fraction=enrichment_fraction,
                                    inner_radius=500,
                                    thickness=thickness,
