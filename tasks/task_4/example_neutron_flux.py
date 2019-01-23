@@ -24,8 +24,8 @@ mats.append(breeder_material)
 #GEOMETRY#
 
 
-sph1 = openmc.Sphere(R=100)
-sph2 = openmc.Sphere(R=200, boundary_type = 'vacuum')
+sph1 = openmc.Sphere(R=600)
+sph2 = openmc.Sphere(R=700, boundary_type = 'vacuum')
 sph3 = +sph1 & -sph2 
 
 breeder_blanket_cell = openmc.Cell(region=sph3)
@@ -43,7 +43,7 @@ geom = openmc.Geometry(universe)
 
 # Instantiate a Settings object
 sett = openmc.Settings()
-batches = 1
+batches = 2
 sett.batches = batches
 sett.inactive = 0
 sett.particles = 5000

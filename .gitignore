@@ -105,6 +105,7 @@ venv.bak/
 
 *.json
 *.h5
+!source_*_particles.h5
 *.html
 *.xml
 *.out

@@ -166,32 +166,32 @@ Expected outputs from this task are on [slide 7 of the presentation](https://sli
 
 When OpenMC runs a statepoint (output) file is produced which contains information on the neutron source, tally results and additional information. This task focuses on information on extracting neutron source information from the statepoint file, while tasks 4, 5 and 6 focus on extracting other information from the statepoint file.
 
-The ```plot_neutron_birth_energy.py``` file shows you how to access the statepoint file created by a simulation. In this example the birth energy of all the simulated neutrons is extracted. A plot of the energy distribution and
-run the ```plot_neutron_birth_energy.py``` script to produce the plot.
+The ```1_plot_neutron_birth_energy.py``` file shows you how to access the statepoint file created by a simulation. In this example the birth energy of all the simulated neutrons is extracted. A plot of the energy distribution and
+run the ```1_plot_neutron_birth_energy.py``` script to produce the plot.
 
-```python3 plot_neutron_birth_energy.py```
+```python3 1_plot_neutron_birth_energy.py```
 
-As you can see there is a mono-energetic energy source of 14MeV neutrons. There are three other source energy distributions available in the ```plot_neutron_birth_energy.py``` script.
+As you can see there is a mono-energetic energy source of 14MeV neutrons. There are three other source energy distributions available in the ```1_plot_neutron_birth_energy.py``` script.
 
 - Try plotting the Watt and Muir neutron spectra and compare them to the mono energetic source.
 
 - Try changing the Muir plasma temperature from 20KeV to 40KeV.
 
-- Try 
+- Try
 
 
 In the next example the initial neutron trajectory and birth location is plotted. Again this information is accessed from the statepoint file.
 
-Run ```python3 plot_neutron_birth_location.py``` to produce the plot
+Run ```python3 2_plot_neutron_birth_location.py``` to produce the plot
 
-The ```example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the centre of the geometry. The objective of this task is to create some 3D particle tracks and visualize them with the geometry.
+The ```3_example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the centre of the geometry. The objective of this task is to create some 3D particle tracks and visualize them with the geometry.
 
-Open up ```atom example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
+Open up ```atom 3_example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
 
 Run the script with the command
-```python3 example_neutron_tracks.py```
+```python3 3_example_neutron_tracks.py```
 
-Use paraview to load the geometry file and then open the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
+Use Paraview to load the geometry file and then open the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
 
 
 

@@ -40,7 +40,7 @@ mats = openmc.Materials([breeder_material, eurofer, copper])
 #surfaces
 central_sol_surface = openmc.ZCylinder(R=100)
 central_shield_outer_surface = openmc.ZCylinder(R=110)
-vessel_inner = openmc.Sphere(R=500)
+vessel_inner_surface = openmc.Sphere(R=500)
 first_wall_outer_surface = openmc.Sphere(R=510)
 breeder_blanket_outer_surface = openmc.Sphere(R=610,boundary_type='vacuum')
 
@@ -54,10 +54,11 @@ central_shield_region = +central_sol_surface & -central_shield_outer_surface & -
 central_shield_cell = openmc.Cell(region=central_shield_region) 
 central_shield_cell.fill = eurofer
 
-inner_vessel_region = -vessel_inner & + central_shield_outer_surface
-inner_vessel_cell = openmc.Cell(region=inner_vessel_region) 
+inner_vessel_region = -vessel_inner_surface & +central_shield_outer_surface
+inner_vessel_cell = openmc.Cell(region=inner_vessel_region)
+# not material set as default is vacuum
 
-first_wall_region = -first_wall_outer_surface & +vessel_inner
+first_wall_region = -first_wall_outer_surface & +vessel_inner_surface
 first_wall_cell = openmc.Cell(region=first_wall_region) 
 first_wall_cell.fill = eurofer
 
@@ -75,7 +76,7 @@ geom = openmc.Geometry(universe)
 
 # Instantiate a Settings object
 sett = openmc.Settings()
-batches = 1
+batches = 2
 sett.batches = batches
 sett.inactive = 1
 sett.particles = 7000
@@ -83,14 +84,15 @@ sett.run_mode = 'fixed source'
 
 # Create a DT point source
 source = openmc.Source()
-source.space = openmc.stats.Point((150,0,0))
 source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
+source.space = openmc.stats.Point((150,0,0))
+# source.file = 'source_7000_particles.h5' # not working with (n,t) for some reason
 sett.source = source
 
 # Create mesh which will be used for tally
 mesh = openmc.Mesh()
-mesh_height=200
+mesh_height=400
 mesh_width = mesh_height
 mesh.dimension = [mesh_width, mesh_height]
 mesh.lower_left = [-750, -750]
@@ -103,7 +105,11 @@ mesh_filter = openmc.MeshFilter(mesh)
 # Create mesh tally to score flux
 mesh_tally = openmc.Tally(1,name='tallies_on_mesh')
 mesh_tally.filters = [mesh_filter]
-mesh_tally.scores = ['absorption'] #swap flux for (n,t), absorption or flux
+
+# works with 'flux', does not work with absorption or '(n,t)'
+tally_to_plot = 'absorption'
+
+mesh_tally.scores = [tally_to_plot] 
 tallies.append(mesh_tally)
 
 
@@ -114,9 +120,10 @@ model.run()
 # open the results file
 sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
+
 # access the flux tally
-flux_tally = sp.get_tally(scores=['absorption'])  #swap flux for (n,t), absorption or flux
-flux_slice = flux_tally.get_slice(scores=['absorption']) #swap flux for (n,t), absorption or flux
+flux_tally = sp.get_tally(scores=[tally_to_plot])
+flux_slice = flux_tally.get_slice(scores=[tally_to_plot])
 flux_slice.mean.shape = (mesh_width, mesh_height)
 
 
@@ -124,5 +131,5 @@ flux_slice.mean.shape = (mesh_width, mesh_height)
 fig = plt.subplot()
 plt.show(fig.imshow(flux_slice.mean))
 
-plt.show(universe.plot(width=(1500,1500),basis='xz'))
+#plt.show(universe.plot(width=(1500,1500),basis='xz'))
 plt.show(universe.plot(width=(1500,1500),basis='xy'))

@@ -39,7 +39,7 @@ sett = openmc.Settings()
 batches = 2
 sett.batches = batches
 sett.inactive = 0
-sett.particles = 200
+sett.particles = 1000
 sett.particle = "neutron"
 sett.run_mode = 'fixed source'
 
@@ -53,7 +53,7 @@ source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Muir(e0=14080000.0, m_rat=5.0, kt=20000.0) #neutron energy = 14.08MeV, AMU for D + T = 5, temperature is 20KeV
 
 #sets the source position, direction and energy to be read from a file
-source.file = 'source.h5'
+#source.file = 'source_1000_particles.h5'
 
 sett.source = source
 

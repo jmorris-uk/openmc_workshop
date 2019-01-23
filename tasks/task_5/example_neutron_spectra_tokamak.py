@@ -88,6 +88,7 @@ source = openmc.Source()
 source.space = openmc.stats.Point((150,0,0))
 source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
+# source.file = 'source_7000_particles.h5' # not working for some reason
 sett.source = source
 
 #setup the tallies
