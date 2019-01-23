@@ -57,7 +57,7 @@ inner_vessel_region = +central_shield_outer_surface & -vessel_inner
 inner_vessel_cell = openmc.Cell(region=inner_vessel_region) 
 inner_vessel_cell.name = 'inner_vessel'
 
-universe = openmc.Universe(cells=[central_sol_cell,central_shield_cell,first_wall_cell, breeder_blanket_cell])
+universe = openmc.Universe(cells=[central_sol_cell, central_shield_cell ,first_wall_cell , breeder_blanket_cell])
 
 # VISULISATION
 

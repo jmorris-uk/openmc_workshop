@@ -18,8 +18,8 @@ mats.export_to_xml()
 
 
 #example surfaces
-sph1 = openmc.Sphere(R=10)
-sph2 = openmc.Sphere(R=20)
+sph1 = openmc.Sphere(R=10, boundary_type='vacuum')
+sph2 = openmc.Sphere(R=20, boundary_type='vacuum')
 sph3 = +sph1 & -sph2 #above sph1 and below sph2
 
 #add surfaces here using https://openmc.readthedocs.io/en/stable/usersguide/geometry.html#surfaces-and-regions

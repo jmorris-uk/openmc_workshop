@@ -90,6 +90,9 @@ RUN apt-get --yes install hdf5-tools
 RUN apt-get --yes install imagemagick
 RUN apt-get --yes install paraview
 
+
+RUN echo 'alias python="python3"' >> ~/.bashrc
+
 RUN git clone https://github.com/Shimwell/openmc_workshop.git
 
 WORKDIR /openmc_workshop
