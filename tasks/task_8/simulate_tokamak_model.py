@@ -136,7 +136,7 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     cell_filter_vessel = openmc.CellFilter(vessel_cell)
     surface_filter_front = openmc.SurfaceFilter(first_wall_inner_surface)
     surface_filter_rear = openmc.SurfaceFilter(breeder_blanket_outer_surface)
-    energy_bins = openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']   
+    energy_bins = [1,2,3]#openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']   
     energy_filter = openmc.EnergyFilter(energy_bins)
 
 
@@ -285,7 +285,11 @@ for i in tqdm(range(0,num_simulations)):
     enrichment_fraction = random.uniform(0, 1)
     thickness = random.uniform(1, 500)
     result = make_geometry_tallies(batches=2,
+<<<<<<< HEAD
                                    nps=1000, # this value will need to be increased
+=======
+                                   nps=500, # this value will need to be increased
+>>>>>>> 895bf195058ae3cddc9ef421172fa616a2b49671
                                    enrichment_fraction=enrichment_fraction,
                                    inner_radius=500,
                                    thickness=thickness,

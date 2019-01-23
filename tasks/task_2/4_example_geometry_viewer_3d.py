@@ -8,10 +8,12 @@ import openmc
 import matplotlib.pyplot as plt
 import os
 
+mats = openmc.Materials()
+
 natural_lead = openmc.Material(1, "natural_lead")
 natural_lead.add_element('Pb', 1,'ao')
+mats.append(natural_lead)
 
-mats = openmc.Materials([natural_lead])
 mats.export_to_xml()
 
 

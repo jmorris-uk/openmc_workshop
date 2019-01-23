@@ -80,7 +80,7 @@ sett = openmc.Settings()
 batches = 1
 sett.batches = batches
 sett.inactive = 1
-sett.particles = 5000
+sett.particles = 7000
 sett.run_mode = 'fixed source'
 
 # Create a DT point source
@@ -125,6 +125,7 @@ spectra_tally_std_dev = [entry[0][0] for entry in spectra_tally.std_dev]
 traces=[]
 traces.append(Scatter(x=energy_bins, 
                       y=spectra_tally_result,
+                      name='breeder_blanket_spectra',
                       line=dict(shape='hv')
                      )
               )
@@ -136,6 +137,7 @@ traces.append(Scatter(x=energy_bins,
 
 # traces.append(Scatter(x=energy_bins, 
 #                       y=spectra_tally_result,
+#                       name='first_wall_spectra',
 #                       line=dict(shape='hv')
 #                      )
 #               )

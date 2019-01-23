@@ -1,5 +1,5 @@
 # Fusion Neutronics workshop with OpenMC
-A selection of resources for learning OpenM with particular focus on simulations relevant for fusion energy.
+A selection of resources for learning OpenMC with particular focus on simulations relevant for fusion energy.
 
 There are a few slides introducing the workshop https://slides.com/shimwell/neutronics_workshop
 
@@ -20,16 +20,14 @@ Now that you have the Docker image you can enable graphics linking between your 
 
 ```xhost local:root```
 
-```docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
+```docker run --net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix  -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc```
 
 This should load up an Ubuntu 18.04 Docker container with OpenMC, Python3, Paraview, nuclear data and other libraries.
 
 You can quickly test the graphics options worked by typing ```paraview``` in the docker container enviroment.
 
-Also check if the workshop repository has been updated by typing the following command from within the Docker container.
 
-```git pull```
-
+The local directory that you run docker from will be mapped to the ```/openmc_workshop/swap_space folder``` within the docker container. This can be useful for transfering files from your docker to your local machine.
 
 ### Getting started on the tasks
 
@@ -55,7 +53,7 @@ From inside the docker container navigate to the task_1 directory and open the f
 
 ```cd tasks/task_1```
 
-```atom example_isotope_plot.py```
+```atom 1_example_isotope_plot.py```
 
 OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation](https://openmc.readthedocs.io/en/v0.10.0/examples/nuclear-data.html). This script will plot a selection of isotopes and certain reactions.
 
@@ -65,7 +63,7 @@ You should see an interactive plot of the n,2n cross section for isotopes of lea
 
 - Try adding the other lead isotopes to the plot.
 
-- Try adding tritium production in Li6 and Li7 to the same plot.
+- Try adding tritium production in Li6 and Li7 to the same plot. You may need to change the axis scale to log
 
 The plot should now show fusion relevant interactions. These are important reactions for breeder blankets as they offer high probability of neutron multiplication and tritium production.
 
@@ -107,15 +105,15 @@ The first example 2D slice plot can be opened and produced by running ...
 
 ```cd tasks/task_2```
 
-```atom 1_example_geometry_viewer_2d.py```
+```atom 1_example_geometry_viewer_2d_fortran_version```
 
-```python3 1_example_geometry_viewer_2d.py```
+```python3 1_example_geometry_viewer_2d_fortran_version.py```
 
 Views of the simple model from different planes (xy, xz, zy) should appear. The second method of producing 2D slice plots works better for large models.
 
-```atom 2_example_geometry_viewer_2d_fortran_version.py```
+```atom 2_example_geometry_viewer_2d.py```
 
-```python3 2_example_geometry_viewer_2d_fortran_version.py```
+```python3 2_example_geometry_viewer_2d.py```
 
 Now try adding a first wall and shielded central column to the model using the OpenMC [simple examples](https://openmc.readthedocs.io/en/stable/examples/pincell.html#Defining-Geometry) and the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/geometry.html) for CSG operations.
 
@@ -123,13 +121,13 @@ Now try adding a first wall and shielded central column to the model using the O
 
 - Change the thickness of the blanket to 100cm
 
-- Try adding a 10cm thick first wall to the hollow sphere.
+- Try adding a 20cm thick first wall to the hollow sphere.
 
 - Try adding a centre column with a 100cm radius and a 40 cm shield.
 
 - Try creating a material from pure copper and assign it to the central column
 
-- Try creating a homogenized material from 10% water and 90% steel and assign it to the first wall and the shield.
+- Try creating a homogenized material from 10% water and 90% tungsten and assign it to the first wall and the shield.
 
 - Colour the geometry plots by material see the [documentation](https://openmc.readthedocs.io/en/stable/usersguide/plots.html) for an example
 
@@ -145,7 +143,9 @@ The next example script shows a simple geometry that can be viewed in 3D using p
 
 ```python3 4_example_geometry_viewer_3d.py ```
 
-select "id" and "surface" in the dropdown menus and click apply to view the geometry. Then use the threshold and slice operations to view the geometry.
+Paraview should load up when this script completes. To make the geometry visible click the "Apply" button and also the small eye ball icon on the left hand side. Then select "id" and "surface" in the dropdown menus to view the geometry. Then use the threshold and slice operations to view the geometry.
+
+- Try using the paraview threshold operation to remove the vacuum cell. Set the threshold to 0 then click the "Apply" button.
 
 - Try combining the last two scripts so that you can visualize the tokamak model in 3D.
 
@@ -175,7 +175,7 @@ As you can see there is a mono-energetic energy source of 14MeV neutrons. There 
 
 - Try plotting the Watt and Muir neutron spectra and compare them to the mono energetic source.
 
-- Try changing the Muir plasma temperature from 20KeV to 40KeV and plot the two distributions on the same figure.
+- Try changing the Muir plasma temperature from 20KeV to 40KeV.
 
 - Try 
 
@@ -191,7 +191,7 @@ Open up ```atom example_neutron_tracks.py``` and take a look at the ```model.run
 Run the script with the command
 ```python3 example_neutron_tracks.py```
 
-Use paraview to load the geometry file and then import the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
+Use paraview to load the geometry file and then open the track files (.vtp files). Parview can also be used to slice (slice this model on the z plane) and threshold the geometry. Looking at the tracks can you tell which material is water and which is zirconium?
 
 
 
@@ -298,7 +298,7 @@ Please allow 15 minutes for this task.
 
 Expected outputs from this task are on [slide 12 of the presentation](https://slides.com/shimwell/neutronics_workshop/#/12)
 
-Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number is 444 so the example tritium production script from task 6 can be modified to find DPA / 444 instead of (n,t) / 205.
+Displacements per atom or DPA is one measure of damage within materials exposed to neutron irradiation. The MT reaction number for DPA is 444.
 
 In the case of DPA a tally multiplier is needed to account for the material and recombination effects. For example different atoms require different amounts of energy to [displace](https://fispact.ukaea.uk/wiki/Output_interpretation#DPA_and_KERMA).
  Without going into detail assume this is already incorporated into the tally result. The only multiplier needed is to multiply the result by the source intensity (in neutrons per second) and the irradiation duration (in seconds).

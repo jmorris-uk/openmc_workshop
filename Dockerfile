@@ -8,7 +8,7 @@ MAINTAINER Jonathan Shimwell
 # build with
 #     sudo docker build -t shimwell/openmc:latest .
 # run with
-#     docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc
+#     docker run --net=host -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD:/openmc_workshop/swap_space -e DISPLAY=unix$DISPLAY -e OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml --privileged shimwell/openmc
 # if you have no GUI in docker try running this xhost command prior to running the image
 #     xhost local:root
 # push to docker store with
