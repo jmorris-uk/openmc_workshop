@@ -53,7 +53,8 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     #MATERIALS#
 
     breeder_material = make_breeder_material(enrichment_fraction,breeder_material_name,temperature_in_C)
-    mats = openmc.Materials([breeder_material])
+    eurofer = make_eurofer()
+    mats = openmc.Materials([breeder_material, eurofer])
 
 
     #GEOMETRY#
