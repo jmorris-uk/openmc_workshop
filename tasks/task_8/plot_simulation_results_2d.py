@@ -20,7 +20,7 @@ with open('simulation_results_tokamak.json') as f:
 
 results_df = json_normalize(data=results)
 
-for tally_name in ['tbr']:
+for tally_name in ['TBR']:
       
       text_values = {}
 
@@ -32,7 +32,7 @@ for tally_name in ['tbr']:
             for e,t,i,tbr, leak in zip(df_filtered_by_mat['enrichment_fraction'],
                                        df_filtered_by_mat['thickness'],
                                        df_filtered_by_mat['inner_radius'],
-                                       df_filtered_by_mat['tbr.value'],
+                                       df_filtered_by_mat['TBR.value'],
                                        df_filtered_by_mat['vessel_leakage.value']):
                   text_value.append('TBR =' +str(tbr)+'<br>'+
                                     'Vessel leakage =' +str(leak)+'<br>'+
