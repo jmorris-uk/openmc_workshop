@@ -110,44 +110,81 @@ def make_materials_geometry_tallies(batches,enrichment_fraction,inner_radius,thi
     tallies = openmc.Tallies()
 
     # define filters
-    cell_filter = openmc.CellFilter(breeder_blanket_cell)
+    cell_filter_breeder = openmc.CellFilter(breeder_blanket_cell)
+    cell_filter_vessel = openmc.CellFilter(vessel_cell)
     particle_filter = openmc.ParticleFilter([1]) #1 is neutron, 2 is photon
-    surface_filter = openmc.SurfaceFilter(breeder_blanket_outer_surface)
+    surface_filter_rear_blanket = openmc.SurfaceFilter(breeder_blanket_outer_surface)
+    surface_filter_rear_vessel = openmc.SurfaceFilter(vessel_outer_surface)
+    energy_bins = openmc.mgxs.GROUP_STRUCTURES['VITAMIN-J-175']
+    energy_filter = openmc.EnergyFilter(energy_bins)
     
-    tally = openmc.Tally(1,name='TBR')
-    tally.filters = [cell_filter,particle_filter]
+    tally = openmc.Tally(name='TBR')
+    tally.filters = [cell_filter_breeder, particle_filter]
     tally.scores = ['205']
     tallies.append(tally)
 
-    tally = openmc.Tally(2,name='leakage')
-    tally.filters = [surface_filter,particle_filter]
+    tally = openmc.Tally(name='blanket_leakage')
+    tally.filters = [surface_filter_rear_blanket, particle_filter]
     tally.scores = ['current']
+    tallies.append(tally)
+
+    tally = openmc.Tally(name='vessel_leakage')
+    tally.filters = [surface_filter_rear_vessel, particle_filter]
+    tally.scores = ['current']
+    tallies.append(tally)
+
+    tally = openmc.Tally(name='breeder_blanket_spectra')
+    tally.filters = [cell_filter_breeder, particle_filter, energy_filter]
+    tally.scores = ['flux']
+    tallies.append(tally)
+
+    tally = openmc.Tally(name='vacuum_vessel_spectra')
+    tally.filters = [cell_filter_vessel, particle_filter, energy_filter]
+    tally.scores = ['flux']
+    tallies.append(tally)
+
+    tally = openmc.Tally(name='DPA')
+    tally.filters = [cell_filter_vessel, particle_filter]
+    tally.scores = ['444']
     tallies.append(tally)
  
 
     #RUN OPENMC #
     model = openmc.model.Model(geom, mats, sett, tallies)
     model.run()
+
     sp = openmc.StatePoint('statepoint.'+str(batches)+'.h5')
 
-    tbr_tally = sp.get_tally(name='TBR')
-    tbr_tally_result = tbr_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
-    tbr_tally_std_dev = tbr_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list 
+    json_output = {'enrichment_fraction': enrichment_fraction,
+                   'inner_radius': inner_radius,
+                   'thickness': thickness,
+                   'breeder_material_name': breeder_material_name,
+                   'temperature_in_C': temperature_in_C}
 
-    leak_tally = sp.get_tally(name='leakage')
-    leak_tally_result = leak_tally.sum[0][0][0]/batches #for some reason the tally sum is a nested list 
-    leak_tally_std_dev = leak_tally.std_dev[0][0][0]/batches #for some reason the tally std_dev is a nested list    
+    tallies_to_retrieve = ['TBR', 'DPA', 'blanket_leakage', 'vessel_leakage']
+    for tally_name in tallies_to_retrieve:
+        tally = sp.get_tally(name=tally_name)
+        # for some reason the tally sum is a nested list
+        tally_result = tally.sum[0][0][0]/batches
+        # for some reason the tally std_dev is a nested list
+        tally_std_dev = tally.std_dev[0][0][0]/batches
 
-    return {'enrichment_fraction':enrichment_fraction,
-            'tbr_tally':tbr_tally_result, 
-            'tbr_tally_std_dev':tbr_tally_std_dev,
-            'leak_tally':leak_tally_result,
-            'leak_tally_st_dev':leak_tally_std_dev,
-            'inner_radius':inner_radius,
-            'thickness':thickness,
-            'breeder_material_name':breeder_material_name,
-            'temperature_in_C':temperature_in_C
-           }
+        json_output[tally_name] = {'value': tally_result,
+                                   'std_dev': tally_std_dev}
+
+    spectra_tallies_to_retrieve = ['breeder_blanket_spectra', 'vacuum_vessel_spectra']
+    for spectra_name in spectra_tallies_to_retrieve:
+        spectra_tally = sp.get_tally(name=spectra_name)
+        spectra_tally_result = [entry[0][0] for entry in spectra_tally.mean]
+        spectra_tally_std_dev = [entry[0][0]
+                                 for entry in spectra_tally.std_dev]
+
+        json_output[spectra_name] = {'value': spectra_tally_result,
+                                     'std_dev': spectra_tally_std_dev,
+                                     'energy_groups': list(energy_bins)}
+
+
+    return json_output
 
 
 
@@ -172,8 +209,7 @@ for i in tqdm(range(0,num_simulations)):
         results.append(result)
 
 
-
-with open('simulation_results_sphere.json', 'w') as file_object:
+with open('simulation_results.json', 'w') as file_object:
     json.dump(results, file_object, indent=2)
        
 

@@ -12,7 +12,7 @@ import pandas as pd
 from pandas.io.json import json_normalize 
 import numpy as np
 
-with open('simulation_results_tokamak.json') as f:
+with open('simulation_results.json') as f:
     results = json.load(f)
 
 # PLOTS RESULTS #

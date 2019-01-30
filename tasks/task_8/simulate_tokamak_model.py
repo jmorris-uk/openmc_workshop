@@ -140,42 +140,42 @@ def make_geometry_tallies(batches,nps,enrichment_fraction,inner_radius,thickness
     #TALLIES#
     tallies = openmc.Tallies()
 
-    tally = openmc.Tally(1,name='TBR')
+    tally = openmc.Tally(name='TBR')
     tally.filters = [cell_filter_breeder,particle_filter]
     tally.scores = ['205']
     tallies.append(tally)
 
-    tally = openmc.Tally(2,name='blanket_leakage')
+    tally = openmc.Tally(name='blanket_leakage')
     tally.filters = [surface_filter_rear,particle_filter]
     tally.scores = ['current']
     tallies.append(tally)
 
-    tally = openmc.Tally(3,name='vessel_leakage')
+    tally = openmc.Tally(name='vessel_leakage')
     tally.filters = [surface_filter_rear,particle_filter]
     tally.scores = ['current']
     tallies.append(tally)    
 
-    tally = openmc.Tally(4,name='rear_neutron_spectra')
+    tally = openmc.Tally(name='rear_neutron_spectra')
     tally.filters = [surface_filter_rear,particle_filter,energy_filter]
     tally.scores = ['flux']
     tallies.append(tally)
 
-    tally = openmc.Tally(5,name='front_neutron_spectra')
+    tally = openmc.Tally(name='front_neutron_spectra')
     tally.filters = [surface_filter_front,particle_filter,energy_filter]
     tally.scores = ['flux']
     tallies.append(tally)
 
-    tally = openmc.Tally(6,name='breeder_blanket_spectra')
+    tally = openmc.Tally(name='breeder_blanket_spectra')
     tally.filters = [cell_filter_breeder,particle_filter,energy_filter]
     tally.scores = ['flux']
     tallies.append(tally)    
 
-    tally = openmc.Tally(7,name='vacuum_vessel_spectra')
+    tally = openmc.Tally(name='vacuum_vessel_spectra')
     tally.filters = [cell_filter_vessel,particle_filter,energy_filter]
     tally.scores = ['flux']
     tallies.append(tally)        
 
-    tally = openmc.Tally(8,name='DPA')
+    tally = openmc.Tally(name='DPA')
     tally.filters = [cell_filter_vessel,particle_filter]
     tally.scores = ['444']
     tallies.append(tally)    
@@ -237,7 +237,7 @@ for i in tqdm(range(0,num_simulations)):
                                    )
     results.append(result)
 
-output_filename= 'simulation_results_tokamak.json'
+output_filename = 'simulation_results.json'
 with open(output_filename, mode='w', encoding='utf-8') as f:
     json.dump(results, f)
 
