@@ -84,10 +84,15 @@ sett.run_mode = 'fixed source'
 
 # Create a DT point source
 source = openmc.Source()
-source.angle = openmc.stats.Isotropic()
-source.energy = openmc.stats.Discrete([14e6], [1])
-source.space = openmc.stats.Point((150,0,0))
-# source.file = 'source_7000_particles.h5' # not working with (n,t) for some reason
+mcnpsource = openmc.Source()
+# source.angle = openmc.stats.Isotropic()
+# source.energy = openmc.stats.Discrete([14e6], [1])
+# source.space = openmc.stats.Point((150,0,0))
+
+source.file = 'source_7000_particles.h5' # not working with (n,t) for some reason
+
+source.module = 'source_7000_particles.cpp' # not working with (n,t) for some reason
+
 sett.source = source
 
 # Create mesh which will be used for tally

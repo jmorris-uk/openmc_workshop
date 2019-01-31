@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-"""example_isotope_plot.py: plots few 2D views of a simple tokamak geometry with neutron flux."""
+""" simulate_model.py: obtains a few netronics parameters for a basic sphere geometry ."""
+""" run with python3 simulate_sphere_model.py | tqdm >> /dev/null """
+""" outputs results to a file called simulation_results.json """
 
 __author__      = "Jonathan Shimwell"
 

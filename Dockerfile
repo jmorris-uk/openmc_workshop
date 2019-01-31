@@ -54,6 +54,11 @@ RUN pip3 install pylint
 RUN pip3 install plotly
 RUN pip3 install tqdm
 
+# Clone and install NJOY2016
+RUN git clone https://github.com/njoy/NJOY2016 /opt/NJOY2016 && \
+    cd /opt/NJOY2016 && \
+    mkdir build && cd build && \
+cmake -Dstatic=on .. && make 2>/dev/null && make install
 
 # installs OpenMc from source (modified version which includes more MT numbers in the cross sections)
 # RUN git clone https://github.com/mit-crpg/openmc && \

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """ simulate_model.py: obtains a few netronics parameters for a basic tokamak geometry ."""
-""" run with python3 simulate_model.py | tqdm >> /dev/null """
-""" outputs results to a file called simulation_results*.json """
+""" run with python3 simulate_tokamak_model.py | tqdm >> /dev/null """
+""" outputs results to a file called simulation_results.json """
 
 __author__      = "Jonathan Shimwell"
 
