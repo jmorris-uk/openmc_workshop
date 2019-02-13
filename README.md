@@ -53,7 +53,7 @@ From inside the docker container navigate to the task_1 directory and open the f
 
 ```cd tasks/task_1```
 
-```atom 1_example_isotope_plot.py```
+```coder 1_example_isotope_plot.py```
 
 OpenMC is well documented so if the script does not make sense take a look at the relevant [documentation](https://openmc.readthedocs.io/en/v0.10.0/examples/nuclear-data.html). This script will plot a selection of isotopes and certain reactions.
 
@@ -71,13 +71,13 @@ The plot should now show fusion relevant interactions. These are important react
 
 Elemental properties can also be found with OpenMC. Try opening the script and then plotting tritium production and neutron multiplication using the ```2_example_element_plot.py``` script
 
-```atom 2_example_element_plot.py```
+```coder 2_example_element_plot.py```
 
 ```python3 2_example_element_plot.py```
 
 A nice feature of OpenMC is that it can plot cross sections for more complete materials made from combinations of isotopes. Open the next example python script and edit the script so that it can plot the tritium production and use this to identify the best elements for tritium production and neutron production. Why we might want to avoid some of these elements?
 
-```atom 3_example_material_plot.py```
+```coder 3_example_material_plot.py```
 
 This file shows us how to plot tritium production in Li4SiO4 which is a candidate ceramic breeder blanket material.
 
@@ -105,13 +105,13 @@ The first example 2D slice plot can be opened and produced by running ...
 
 ```cd tasks/task_2```
 
-```atom 1_example_geometry_viewer_2d_fortran_version```
+```coder 1_example_geometry_viewer_2d_fortran_version```
 
 ```python3 1_example_geometry_viewer_2d_fortran_version.py```
 
 Views of the simple model from different planes (xy, xz, zy) should appear. The second method of producing 2D slice plots works better for large models.
 
-```atom 2_example_geometry_viewer_2d.py```
+```coder 2_example_geometry_viewer_2d.py```
 
 ```python3 2_example_geometry_viewer_2d.py```
 
@@ -133,13 +133,13 @@ Now try adding a first wall and shielded central column to the model using the O
 
 By the time you have added you extra geometry components your solution should look similar to the geometry contained in the next example script.
 
-```atom 3_example_geometry_viewer_2d_tokamak.py```
+```coder 3_example_geometry_viewer_2d_tokamak.py```
 
 ```python3 3_example_geometry_viewer_2d_tokamak.py```
 
 The next example script shows a simple geometry that can be viewed in 3D using paraview. This converts the geometry into a block
 
-```atom 4_example_geometry_viewer_3d.py ```
+```coder 4_example_geometry_viewer_3d.py ```
 
 ```python3 4_example_geometry_viewer_3d.py ```
 
@@ -149,7 +149,7 @@ Paraview should load up when this script completes. To make the geometry visible
 
 - Try combining the last two scripts so that you can visualize the tokamak model in 3D.
 
-```atom 5_example_geometry_viewer_3d_tokamak.py ```
+```coder 5_example_geometry_viewer_3d_tokamak.py ```
 
 ```python3 5_example_geometry_viewer_3d_tokamak.py ```
 
@@ -186,7 +186,7 @@ Run ```python3 2_plot_neutron_birth_location.py``` to produce the plot
 
 The ```3_example_neutron_tracks.py``` file contains a hollow sphere made of two materials and a 14MeV point source in the centre of the geometry. The objective of this task is to create some 3D particle tracks and visualize them with the geometry.
 
-Open up ```atom 3_example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
+Open up ```coder 3_example_neutron_tracks.py``` and take a look at the ```model.run(tracks=True)``` method. This argument results in the creation of a h5 file for each neutron simulated.
 
 Run the script with the command
 ```python3 3_example_neutron_tracks.py```
@@ -220,7 +220,7 @@ You should see the isotropic point source appearing along with the simple sphere
 
 There is another example neutron flux file with the simple tokamak geometry. Take a look at ```example_neutron_flux_tokamak.py``` and run the file with the command.
 
-```atom example_neutron_flux_tokamak.py```
+```coder example_neutron_flux_tokamak.py```
 
 ```Python3 example_neutron_flux_tokamak.py```
 
@@ -246,7 +246,7 @@ In this task the neutron spectra at two different locations will be found and vi
 
 Open ```example_neutron_spectra_tokamak.py``` to see how the neutron spectra is obtained for the breeder blanket cell. Then run ```example_neutron_spectra_tokamak.py``` to plot the neutron spectra within the breeder blanket.
 
-```atom example_neutron_spectra_tokamak.py```
+```coder example_neutron_spectra_tokamak.py```
 
 ```Python3 example_neutron_spectra_tokamak.py```
 
@@ -268,7 +268,7 @@ In this task you will find the tritium breeding ratio (TBR) for a single tokamak
 
 Open and run the ```example_tritium_production.py``` script with the following commands.
 
-```atom example_tritium_production.py```
+```coder example_tritium_production.py```
 
 ```Python3 example_tritium_production.py```
 
@@ -280,7 +280,7 @@ Your should find that the TBR value obtained from the improved simulation is bel
 
 One option for increasing the TBR is to increase the Li6 content within the blanket. Open and run the next script and see how TBR changes as the Li6 enrichment is increased.
 
-```atom example_tritium_production_study.py```
+```coder example_tritium_production_study.py```
 
 ```Python3 example_tritium_production_study.py```
 
