@@ -94,7 +94,7 @@ RUN apt-get --yes update
 RUN apt-get --yes install imagemagick
 RUN apt-get --yes install hdf5-tools
 RUN apt-get --yes install paraview
-
+RUN apt-get --yes install eog
 
 RUN echo 'alias python="python3"' >> ~/.bashrc
 # RUN echo 'alias code="code --user-data-dir"' >> ~/.bashrc
