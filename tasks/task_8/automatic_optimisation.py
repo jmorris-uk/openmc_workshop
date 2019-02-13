@@ -270,7 +270,9 @@ for i in range(50):
     max_values.append(max(GP.y))
     evaluations.append(len(GP.y))
 
+os.system('convert *.png output.gif')
 
+os.system('eog -f output.gif')
 
 # results = []
 # num_simulations=5
