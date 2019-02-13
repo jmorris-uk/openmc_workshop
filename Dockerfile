@@ -91,13 +91,16 @@ RUN OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml
 RUN export OPENMC_CROSS_SECTIONS=/openmc/nndc_hdf5/cross_sections.xml
 
 RUN apt-get --yes update
-RUN apt-get --yes install hdf5-tools
 RUN apt-get --yes install imagemagick
+RUN apt-get --yes install hdf5-tools
 RUN apt-get --yes install paraview
 
 
 RUN echo 'alias python="python3"' >> ~/.bashrc
+# RUN echo 'alias code="code --user-data-dir"' >> ~/.bashrc
 
-RUN git clone https://github.com/Shimwell/openmc_workshop.git
+RUN git clone https://github.com/C-bowman/inference_tools.git
+
+RUN echo 'export PYTHONPATH=$PYTHONPATH:/inference_tools/inference' >> ~/.bashrc
 
 WORKDIR /openmc_workshop
