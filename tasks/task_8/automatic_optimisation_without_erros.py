@@ -58,9 +58,9 @@ def make_materials_geometry_tallies(enrichment_fraction_list):
     batches = 2
     inner_radius = 500
     thickness = 100
-    breeder_material_name = 'F2Li2BeF2'
+    breeder_material_name = 'Li'
     temperature_in_C = 500
-    if isinstance(enrichment_fraction_list,list):
+    if type(enrichment_fraction_list) == list:
         enrichment_fraction = enrichment_fraction_list[0]
     else:
         enrichment_fraction = enrichment_fraction_list
@@ -219,8 +219,6 @@ def example_plot_1d():
     ax1.set_yticks([])
     ax1.legend(loc=4)
 
-    ax2.errorbar(GP.x, GP.y, yerr=GP.y_err, ftm=None, linestyle='', c = 'red', label = 'observations', zorder = 5)
-    # ax2.plot(GP.x, GP.y, marker='o', c = 'red', label = 'observations', zorder = 5)
     ax2.plot(GP.x, GP.y, 'o', c = 'red', label = 'observations', zorder = 5)
     #ax2.plot(x_gp, y_func, lw = 1.5, c = 'red', ls = 'dashed', label = 'actual function')
     ax2.plot(x_gp, mu, lw = 2, c = 'blue', label = 'GP prediction')
@@ -237,26 +235,15 @@ def example_plot_1d():
     ax3.set_xlabel('x')
     ax3.legend(loc=1)
 
-    print('plotting ',GP.x, GP.y, GP.y_err)
-    #plt.show()
     plt.savefig(str(i).zfill(3)+'.png')
 
 
 bounds = [(0.0,1.0)]
-x = array([0.0,0.8,0.4])
-y = []
-y_errors = []
-for coords in x:
-    
-    results = make_materials_geometry_tallies(coords)
-    
+x = array([0.0,1.0])
 
-    y.append(results['TBR']['value'])
-    y_errors.append(results['TBR']['std_dev'] * 2)
-
+y = [make_materials_geometry_tallies(0.0)['TBR']['value'],make_materials_geometry_tallies(1.0)['TBR']['value']]
 print('y=',y)
-print('y_errors=',y_errors)
-GP = GpOptimiser(x,y,y_err=y_errors,bounds=bounds)
+GP = GpOptimiser(x,y,bounds=bounds)
 
 M = 500
 x_gp = linspace(*bounds[0],M)
@@ -264,27 +251,21 @@ x_gp = linspace(*bounds[0],M)
 max_values = [max(GP.y)]
 evaluations = [len(GP.y)]
 
-os.system('rm *.png')
-# os.system('rm *')
-
-for i in range(10):
+for i in range(50):
     # plot the current state of the optimisation
     example_plot_1d()
 
     # request the proposed evaluation
-    new_x = GP.search_for_maximum()[0]
+    new_x = GP.search_for_maximum()
 
     # evaluate the new point
-    new_result = make_materials_geometry_tallies(new_x)
-    new_y = new_result['TBR']['value']
-    new_y_error = new_result['TBR']['std_dev'] * 2
+    new_y = make_materials_geometry_tallies(new_x[0])['TBR']['value']
 
     print('x',new_x)
     print('y',new_y)
-    print('new_y_error',new_y_error)
 
     # update the gaussian process with the new information
-    GP.add_evaluation(new_x, new_y, new_y_err=new_y_error),
+    GP.add_evaluation(new_x, new_y)
 
     # track the optimum value for plotting
     max_values.append(max(GP.y))
