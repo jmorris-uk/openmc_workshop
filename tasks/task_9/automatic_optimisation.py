@@ -19,6 +19,7 @@ from material_maker_functions import *
 from numpy import sin, cos, linspace, array, meshgrid
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import ghalton
 
 
 
@@ -241,17 +242,21 @@ def example_plot_1d():
     #plt.show()
     plt.savefig(str(i).zfill(3)+'.png')
 
+sequencer = ghalton.Halton(5)
+
+x = sequencer.get(100)
+
 
 bounds = [(0.0,1.0)]
-x = array([0.0,0.8,0.4])
+x = array([])
 y = []
 y_errors = []
 for coords in x:
     
-    results = make_materials_geometry_tallies(coords)
+    results = make_materials_geometry_tallies(coords[0])
     
-
     y.append(results['TBR']['value'])
+    
     y_errors.append(results['TBR']['std_dev'] * 2)
 
 print('y=',y)
