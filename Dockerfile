@@ -15,13 +15,19 @@ MAINTAINER Jonathan Shimwell
 #     docker login
 #     docker push shimwell/openmc:latest
 #
+RUN apt-get --yes update && apt-get --yes upgrade
 
-
+RUN apt-get -y install locales
+RUN locale-gen en_US.UTF-8
+ENV LC_CTYPE en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # Install additional packages
 
-RUN apt-get --yes update && apt-get --yes upgrade
 
+
+RUN apt-get --yes update && apt-get --yes upgrade
 RUN apt-get --yes install gfortran g++ cmake libhdf5-dev git
 
 RUN apt-get update
@@ -115,8 +121,7 @@ RUN apt-get --yes install libxkbfile1
 RUN dpkg -i stable 
 RUN apt-get --yes install -f
 
-ENV LC_CTYPE en_US.UTF-8
-ENV LANG en_US.UTF-8
+
 
 RUN pip3 install ghalton
 
