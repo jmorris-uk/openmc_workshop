@@ -115,4 +115,9 @@ RUN apt-get --yes install libxkbfile1
 RUN dpkg -i stable 
 RUN apt-get --yes install -f
 
+ENV LC_CTYPE en_US.UTF-8
+ENV LANG en_US.UTF-8
+
+RUN pip3 install ghalton
+
 WORKDIR /openmc_workshop
