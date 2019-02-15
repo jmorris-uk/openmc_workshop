@@ -77,11 +77,12 @@ RUN cd openmc && python3 setup.py install
 
 RUN cd openmc && python3 /openmc/scripts/openmc-get-nndc-data -b
 
+RUN apt-get update
 # installs the Atom text editor
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:webupd8team/atom
-RUN apt update
-RUN apt install -y atom
+# RUN apt-get install -y software-properties-common
+# RUN add-apt-repository ppa:webupd8team/atom
+# RUN apt update
+# RUN apt install -y atom
 
 RUN apt-get install -y firefox
 
@@ -95,12 +96,23 @@ RUN apt-get --yes install imagemagick
 RUN apt-get --yes install hdf5-tools
 RUN apt-get --yes install paraview
 RUN apt-get --yes install eog
+RUN apt-get --yes install wget
 
 RUN echo 'alias python="python3"' >> ~/.bashrc
-# RUN echo 'alias code="code --user-data-dir"' >> ~/.bashrc
+
+RUN echo 'function coder() { code "$1" --user-data-dir; }' >> ~/.bashrc
 
 RUN git clone https://github.com/C-bowman/inference_tools.git
 
 RUN echo 'export PYTHONPATH=$PYTHONPATH:/inference_tools/inference' >> ~/.bashrc
+
+RUN git clone https://github.com/Shimwell/openmc_workshop.git
+
+RUN wget https://update.code.visualstudio.com/1.31.1/linux-deb-x64/stable
+
+RUN apt-get --yes install dpkg
+RUN apt-get --yes install libxkbfile1
+RUN dpkg -i stable 
+RUN apt-get --yes install -f
 
 WORKDIR /openmc_workshop
