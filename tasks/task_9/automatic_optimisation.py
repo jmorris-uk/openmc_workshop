@@ -55,12 +55,7 @@ def make_breeder_material(enrichment_fraction, breeder_material_name, temperatur
 
 
 
-def make_materials_geometry_tallies(enrichment_fraction_list):
-    batches = 2
-    inner_radius = 500
-    thickness = 100
-    breeder_material_name = 'F2Li2BeF2'
-    temperature_in_C = 500
+def make_materials_geometry_tallies(enrichment_fraction_list,batches = 2, inner_radius = 500, thickness = 100, breeder_material_name = 'Li', temperature_in_C = 500):
     if isinstance(enrichment_fraction_list,list):
         enrichment_fraction = enrichment_fraction_list[0]
     else:
@@ -204,15 +199,17 @@ def make_materials_geometry_tallies(enrichment_fraction_list):
     return json_output
 
 
-def example_plot_1d():
+def example_plot_1d(GP):
+    M = 500
+    x_gp = linspace(*bounds[0],M)
     mu, sig = GP(x_gp)
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, gridspec_kw={'height_ratios': [1, 3, 1]}, figsize = (10,8))
     plt.subplots_adjust(hspace=0)
 
     ax1.plot(evaluations, max_values, marker = 'o', ls = 'solid', c = 'orange', label = 'optimum value', zorder = 5)
     #ax1.plot([2,12], [max(y_func), max(y_func)], ls = 'dashed', label = 'actual max', c = 'black')
-    ax1.set_xlabel('function evaluations')
-    ax1.set_xlim([2,12])
+    ax1.set_xlabel('Simulations')
+    ax1.set_xlim([0,len(evaluations)])
     #ax1.set_ylim([max(y)-0.3, max(y_func)+0.3])
     ax1.xaxis.set_label_position('top')
     ax1.yaxis.set_label_position('right')
@@ -220,76 +217,93 @@ def example_plot_1d():
     ax1.set_yticks([])
     ax1.legend(loc=4)
 
-    ax2.errorbar(GP.x, GP.y, yerr=GP.y_err, ftm=None, linestyle='', c = 'red', label = 'observations', zorder = 5)
+    
+    ax2.errorbar(GP.x, GP.y, marker='o', yerr=GP.y_err, ftm=None, linestyle='', c = 'green', label = 'Simulation (Halton sample selection)', zorder = 5)
+    if len(GP.y) > number_of_samples:
+        ax2.errorbar(GP.x[number_of_samples:], GP.y[number_of_samples:], marker='o', yerr=GP.y_err[number_of_samples:], ftm=None, linestyle='', c = 'red', label = 'Simulation (Gaussian process selection)', zorder = 6)
     # ax2.plot(GP.x, GP.y, marker='o', c = 'red', label = 'observations', zorder = 5)
-    ax2.plot(GP.x, GP.y, 'o', c = 'red', label = 'observations', zorder = 5)
+    #ax2.plot(GP.x, GP.y, 'o', c = 'red', label = 'observations', zorder = 5)
     #ax2.plot(x_gp, y_func, lw = 1.5, c = 'red', ls = 'dashed', label = 'actual function')
     ax2.plot(x_gp, mu, lw = 2, c = 'blue', label = 'GP prediction')
     ax2.fill_between(x_gp, (mu-2*sig), y2=(mu+2*sig), color = 'blue', alpha = 0.15, label = '95% confidence interval')
     # ax2.set_ylim([min(mu-2*sig),max(mu+2*sig)])
     ax2.set_ylim([0.8,2.0])
-    ax2.set_ylabel('y')
+    ax2.set_xlim(*GP.bounds)
+    ax2.set_ylabel('TBR')
     ax2.set_xticks([])
     ax2.legend(loc=2)
 
     aq = array([abs(GP.expected_improvement(array([k]))) for k in x_gp])
     ax3.plot(x_gp, 0.9*aq/max(aq), c = 'green', label = 'acquisition function')
     ax3.set_yticks([])
-    ax3.set_xlabel('x')
+    ax3.set_xlabel('Li6 enrichment')
     ax3.legend(loc=1)
 
     print('plotting ',GP.x, GP.y, GP.y_err)
-    #plt.show()
-    plt.savefig(str(i).zfill(3)+'.png')
+    # plt.show()
+    plt.savefig(str(len(GP.y)).zfill(4)+'.png')
 
-sequencer = ghalton.Halton(5)
 
-x = sequencer.get(100)
-
+os.system('rm *.png')
+sequencer = ghalton.Halton(1)
+number_of_samples = 10
+x = sequencer.get(number_of_samples)
+x = [item for sublist in x for item in sublist]
 
 bounds = [(0.0,1.0)]
-x = array([])
+#x = array([])
 y = []
 y_errors = []
-for coords in x:
+
+max_values = []
+evaluations = []
+
+all_results = []
+
+for filename_counter, coords in enumerate(x):
     
-    results = make_materials_geometry_tallies(coords[0])
+    results = make_materials_geometry_tallies(enrichment_fraction_list=coords ,batches = 2, inner_radius = 500, thickness = 100, breeder_material_name = 'Li', temperature_in_C = 500)
     
+    all_results.append(results)     
+
     y.append(results['TBR']['value'])
     
     y_errors.append(results['TBR']['std_dev'] * 2)
 
-print('y=',y)
-print('y_errors=',y_errors)
-GP = GpOptimiser(x,y,y_err=y_errors,bounds=bounds)
+    print('x from HS',x[0:filename_counter+1])
+    print('y from HS',y)
+    print('y_errors  from HS',y_errors)
+    print(bounds)
+    
 
-M = 500
-x_gp = linspace(*bounds[0],M)
+    if filename_counter >0:
+        GP = GpOptimiser(x[0:filename_counter+1],y,y_err=y_errors,bounds=bounds)
+        max_values.append(max(GP.y))
+        evaluations.append(len(GP.y))
+        example_plot_1d(GP)
 
-max_values = [max(GP.y)]
-evaluations = [len(GP.y)]
 
-os.system('rm *.png')
-# os.system('rm *')
 
-for i in range(10):
+for i in range(number_of_samples,number_of_samples+10):
     # plot the current state of the optimisation
-    example_plot_1d()
+    example_plot_1d(GP)
 
     # request the proposed evaluation
     new_x = GP.search_for_maximum()[0]
 
     # evaluate the new point
-    new_result = make_materials_geometry_tallies(new_x)
+    new_result = make_materials_geometry_tallies(enrichment_fraction_list = new_x ,batches = 2, inner_radius = 500, thickness = 100, breeder_material_name = 'Li', temperature_in_C = 500)
+    all_results.append(results)  
+    
     new_y = new_result['TBR']['value']
     new_y_error = new_result['TBR']['std_dev'] * 2
 
-    print('x',new_x)
-    print('y',new_y)
-    print('new_y_error',new_y_error)
+    print('x from loop',new_x)
+    print('y from loop',new_y)
+    print('new_y_error from loop',new_y_error)
 
     # update the gaussian process with the new information
-    GP.add_evaluation(new_x, new_y, new_y_err=new_y_error),
+    GP.add_evaluation(new_x, new_y, new_y_err=new_y_error)
 
     # track the optimum value for plotting
     max_values.append(max(GP.y))
@@ -299,27 +313,10 @@ os.system('convert *.png output.gif')
 
 os.system('eog -f output.gif')
 
-# results = []
-# num_simulations=5
-
-# for i in tqdm(range(0,num_simulations)):
-#         breeder_material_name = random.choice(['Li4SiO4', 'F2Li2BeF2', 'Li', 'Pb84.2Li15.8'])
-#         enrichment_fraction = random.uniform(0, 1)
-#         inner_radius = random.uniform(1, 1000)
-#         thickness = random.uniform(1, 500)
-
-#         result = make_materials_geometry_tallies(batches=4,
-#                                                 enrichment_fraction=enrichment_fraction,
-#                                                 inner_radius=inner_radius,
-#                                                 thickness=thickness,
-#                                                 breeder_material_name = breeder_material_name, 
-#                                                 temperature_in_C=500
-#                                                 )
-#         results.append(result)
 
 
-# with open('simulation_results.json', 'w') as file_object:
-#     json.dump(results, file_object, indent=2)
+with open('simulation_results.json', 'w') as file_object:
+    json.dump(all_results.append(results)  , file_object, indent=2)
        
 
 
