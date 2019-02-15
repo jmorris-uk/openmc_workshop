@@ -121,6 +121,8 @@ RUN apt-get --yes install libxkbfile1
 RUN dpkg -i stable 
 RUN apt-get --yes install -f
 
+git config --global user.email "mail@jshimwell.com"
+git config --global user.name "shimwell"
 
 
 RUN pip3 install ghalton
