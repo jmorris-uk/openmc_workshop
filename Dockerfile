@@ -80,6 +80,7 @@ RUN PATH="$PATH:/openmc/bld/bin/"
 RUN cp /openmc/bld/bin/openmc /usr/local/bin
 
 RUN cd openmc && python3 setup.py install
+#RUN cd openmc && pip3 install .
 
 RUN cd openmc && python3 /openmc/scripts/openmc-get-nndc-data -b
 
