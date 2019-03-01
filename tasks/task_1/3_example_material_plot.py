@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""example_isotope_plot.py: plots cross sections for a couple of isotopes."""
+"""example_isotope_plot.py: plots cross sections for materials."""
 
 __author__      = "Jonathan Shimwell"
 

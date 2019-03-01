@@ -74,7 +74,7 @@ def make_eurofer():
     eurofer = openmc.Material(name='EUROFER97')
     eurofer.set_density('g/cm3', 7.75)
     eurofer.add_element('Fe', 89.067, percent_type='wo')
-    #eurofer.add_element('C', 0.11, percent_type='wo')
+    eurofer.add_element('C', 0.11, percent_type='wo')
     eurofer.add_element('Mn', 0.4, percent_type='wo')
     eurofer.add_element('Cr', 9.0, percent_type='wo')
     eurofer.add_element('Ta', 0.12, percent_type='wo')

@@ -17,20 +17,20 @@ mats.export_to_xml()
 
 
 #example surfaces
-surface_sph1 = openmc.Sphere(R=10) #hint, change the radius of this shpere to 500
-surface_sph2 = openmc.Sphere(R=20) #hint, change the radius of this shpere to 500+100
+surface_sph1 = openmc.Sphere(R=100) #hint, change the radius of this shpere to 500
+surface_sph2 = openmc.Sphere(R=200) #hint, change the radius of this shpere to 500+100
 
 volume_sph1 = +surface_sph1 & -surface_sph2 # above (+) surface_sph and below (-) surface_sph2
 
 #add surfaces here using https://openmc.readthedocs.io/en/stable/usersguide/geometry.html#surfaces-and-regions
 
 #example cell
-cell = openmc.Cell(region=volume_sph1)
-cell.fill = natural_lead
+cell1 = openmc.Cell(region=volume_sph1)
+cell1.fill = natural_lead
 
 #add another cell here
 
-universe = openmc.Universe(cells=[cell]) #hint, this list will need to include the new cell
+universe = openmc.Universe(cells=[cell1]) #hint, this list will need to include the new cell
 
 geom = openmc.Geometry(universe)
 
@@ -39,7 +39,7 @@ geom.export_to_xml()
 p = openmc.Plot()
 p.basis='xz'
 p.filename = 'plot'
-p.width = (45, 45)
+p.width = (850, 850) #hint, this might need to be increased to see the new large geometry
 p.pixels = (400, 400) 
 p.color_by = 'material'
 p.colors = {natural_lead: 'blue'}

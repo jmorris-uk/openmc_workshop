@@ -27,8 +27,8 @@ mats.append(transparent_material)
 #GEOMETRY#
 
 sph0 = openmc.Sphere(R=50)
-sph1 = openmc.Sphere(R=100, boundary_type = 'vacuum')
-flat_surf = openmc.XPlane(x0=0)
+sph1 = openmc.Sphere(R=600, boundary_type = 'vacuum')
+flat_surf = openmc.YPlane(y0=0)
 
 simple_moderator_cell = openmc.Cell(region= +sph0 & -sph1 & +flat_surf)
 simple_moderator_cell.fill = moderating_material
@@ -52,7 +52,7 @@ sett = openmc.Settings()
 batches = 1
 sett.batches = batches
 sett.inactive = 0
-sett.particles = 12
+sett.particles = 20
 sett.particle = "neutron"
 sett.track = (1,2,4)
 sett.run_mode = 'fixed source'
@@ -62,6 +62,8 @@ source = openmc.Source()
 source.space = openmc.stats.Point((0,0,0))
 source.angle = openmc.stats.Isotropic()
 source.energy = openmc.stats.Discrete([14e6], [1])
+
+source.file = 'source_1000_particles.h5'
 sett.source = source
 
 
